@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="8453dff6-6ba4-44c3-bb67-1dc84eb0ba33" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectId" id="1Yo2PGQRGPqh0nxnIbxNT0SioFI" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showExcludedFiles" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../testbed" />
+    <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="D:\WorkSpace\mycar\custom_parts" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration name="collectdatajs" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="mycar" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/collectdatajs.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.collectdatajs" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="8453dff6-6ba4-44c3-bb67-1dc84eb0ba33" name="Default Changelist" comment="" />
+      <created>1583594600733</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1583594600733</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="734" y="437" key="FileChooserDialogImpl" timestamp="1583761762310">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="734" y="437" key="FileChooserDialogImpl/3840.557.1920.1000/0.0.1920.1040@0.0.1920.1040" timestamp="1583761762310" />
+    <state width="1366" height="267" key="GridCell.Tab.0.bottom" timestamp="1583625079141">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1366" height="267" key="GridCell.Tab.0.bottom/3840.557.1920.1000/0.0.1920.1040@0.0.1920.1040" timestamp="1583625079141" />
+    <state width="1366" height="267" key="GridCell.Tab.0.center" timestamp="1583625079141">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1366" height="267" key="GridCell.Tab.0.center/3840.557.1920.1000/0.0.1920.1040@0.0.1920.1040" timestamp="1583625079141" />
+    <state width="1366" height="267" key="GridCell.Tab.0.left" timestamp="1583625079141">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1366" height="267" key="GridCell.Tab.0.left/3840.557.1920.1000/0.0.1920.1040@0.0.1920.1040" timestamp="1583625079141" />
+    <state width="1366" height="267" key="GridCell.Tab.0.right" timestamp="1583625079141">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state width="1366" height="267" key="GridCell.Tab.0.right/3840.557.1920.1000/0.0.1920.1040@0.0.1920.1040" timestamp="1583625079141" />
+    <state x="406" y="214" key="SettingsEditor" timestamp="1583595703088">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="406" y="214" key="SettingsEditor/3840.557.1920.1000/0.0.1920.1040@0.0.1920.1040" timestamp="1583595703088" />
+    <state x="654" y="402" key="com.intellij.ide.util.TipDialog" timestamp="1583761123297">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="654" y="402" key="com.intellij.ide.util.TipDialog/3840.557.1920.1000/0.0.1920.1040@0.0.1920.1040" timestamp="1583761123297" />
+    <state x="259" y="460" width="1037" height="684" key="dock-window-1" timestamp="1583609599912">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="259" y="460" width="1037" height="684" key="dock-window-1/3840.557.1920.1000/0.0.1920.1040@0.0.1920.1040" timestamp="1583609599912" />
+  </component>
+</project>
