@@ -1,9 +1,13 @@
 from donkeycar.vehicle import Vehicle
 from donkeycar.parts.datastore import TubHandler
-from .custom_parts.HCSR04 import HCSR04
-from .custom_parts.ADS1115 import ADS1115
-from .custom_parts.BNO055 import BNO055
-from .custom_parts.AS5048A import AS5048A
+from donkeycar.parts.controller import get_js_controller
+from donkeycar.parts.throttle_filter import ThrottleFilter
+from donkeycar.parts.actuator import PCA9685, PWMSteering, PWMThrottle
+
+from custom_parts.HCSR04 import HCSR04
+from custom_parts.ADS1115 import ADS1115
+from custom_parts.BNO055 import BNO055
+from custom_parts.AS5048A import AS5048A
 
 
 import donkeycar as dk
@@ -29,9 +33,44 @@ V.add(bno055, outputs=["bno055/heading", "bno055/roll", "bno055/pitch", "bno055/
 as5048a = AS5048A()
 V.add(as5048a, outputs=['as5048a'], threaded=True)
 
+ctr = get_js_controller(cfg)
+V.add(ctr,
+      outputs=['user/angle', 'user/throttle', 'user/mode', 'recording'],
+      threaded=True)
+
+# this throttle filter will allow one tap back for esc reverse
+th_filter = ThrottleFilter()
+V.add(th_filter, inputs=['user/throttle'], outputs=['user/throttle'])
+
+
+steering_controller = PCA9685(cfg.STEERING_CHANNEL, cfg.PCA9685_I2C_ADDR, busnum=cfg.PCA9685_I2C_BUSNUM)
+steering = PWMSteering(controller=steering_controller,
+                       left_pulse=cfg.STEERING_LEFT_PWM,
+                       right_pulse=cfg.STEERING_RIGHT_PWM)
+
+throttle_controller = PCA9685(cfg.THROTTLE_CHANNEL, cfg.PCA9685_I2C_ADDR, busnum=cfg.PCA9685_I2C_BUSNUM)
+throttle = PWMThrottle(controller=throttle_controller,
+                       max_pulse=cfg.THROTTLE_FORWARD_PWM,
+                       zero_pulse=cfg.THROTTLE_STOPPED_PWM,
+                       min_pulse=cfg.THROTTLE_REVERSE_PWM)
+
+V.add(steering, inputs=['user/angle'])
+V.add(throttle, inputs=['user/throttle'])
+
+
 # data save
-inputs = ['hcsr04', 'ads1115/vm', 'ads1115/vp']
-types = ['float', 'float', 'float']
+inputs = ['hcsr04', 'ads1115/vm', 'ads1115/vp', 'as5048a', "bno055/heading", "bno055/roll", "bno055/pitch",
+          "bno055/sys", "bno055/gyro", "bno055/accel", "bno055/mag", "bno055/ori_x", "bno055/ori_y", "bno055/ori_z",
+          "bno055/ori_w", "bno055/temp_c", "bno055/mag_x", "bno055/mag_y", "bno055/mag_z", "bno055/gyr_x",
+          "bno055/gyr_y", "bno055/gyr_z", "bno055/acc_x", "bno055/acc_y", "bno055/acc_z", "bno055/lacc_x",
+          "bno055/lacc_y", "bno055/lacc_z", "bno055/gra_x", "bno055/gra_y", "bno055/gra_z",
+          'user/angle', 'user/throttle']
+types = ['float', 'float', 'float', 'int', 'float', 'float', 'float',
+         'float', 'float', 'float', 'float', 'float', 'float', 'float',
+         'float', 'float', 'float', 'float', 'float', 'float',
+         'float', 'float', 'float', 'float', 'float', 'float',
+         'float', 'float', 'float', 'float', 'float',
+         'float', 'float']
 th = TubHandler(path=cfg.DATA_PATH)
 tub = th.new_tub_writer(inputs=inputs, types=types, user_meta=meta)
 V.add(tub, inputs=inputs, outputs=["tub/num_records"])
