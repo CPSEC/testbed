@@ -1,8 +1,6 @@
-import logging
-import sys
 import time
-
 from Adafruit_BNO055 import BNO055 as b
+
 
 class BNO055:
 
@@ -18,17 +16,18 @@ class BNO055:
         status, self_test, error = self.bno.get_system_status()
         print('System status: {0}'.format(status))
         print('Self test result (0x0F is normal): 0x{0:02X}'.format(self_test))
-        # Print out an error if system status is in error mode.
-        if status == 0x01:
-            print('System error: {0}'.format(error))
-            print('See datasheet section 4.3.59 for the meaning.')
-        # Print BNO055 software revision and other diagnostic data.
-        sw, bl, accel, mag, gyro = self.bno.get_revision()
-        print('Software version:   {0}'.format(sw))
-        print('Bootloader version: {0}'.format(bl))
-        print('Accelerometer ID:   0x{0:02X}'.format(accel))
-        print('Magnetometer ID:    0x{0:02X}'.format(mag))
-        print('Gyroscope ID:       0x{0:02X}\n'.format(gyro))
+        # # Print out an error if system status is in error mode.
+        # if status == 0x01:
+        #     print('System error: {0}'.format(error))
+        #     print('See datasheet section 4.3.59 for the meaning.')
+        # # Print BNO055 software revision and other diagnostic data.
+        # sw, bl, accel, mag, gyro = self.bno.get_revision()
+        # print('Software version:   {0}'.format(sw))
+        # print('Bootloader version: {0}'.format(bl))
+        # print('Accelerometer ID:   0x{0:02X}'.format(accel))
+        # print('Magnetometer ID:    0x{0:02X}'.format(mag))
+        # print('Gyroscope ID:       0x{0:02X}\n'.format(gyro))
+
         self.heading = self.roll = self.pitch = self.sys = self.gyro = self.accel = self.mag = \
             self.ori_x = self.ori_y = self.ori_z = self.ori_w = self.temp_c = self.mag_x = self.mag_y = \
             self.mag_z = self.gyr_x = self.gyr_y = self.gyr_z = self.acc_x = self.acc_y = self.acc_z = \
