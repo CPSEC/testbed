@@ -85,7 +85,7 @@ def get_ip():
 
 if __name__ == '__main__':
     oled = OLED()
-    oled.text_append("IP"+get_ip())
+    oled.text_append(["IP: "+get_ip()])
     oled.display()
 
     from multiprocessing.connection import Listener
