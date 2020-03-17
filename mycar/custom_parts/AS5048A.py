@@ -23,7 +23,7 @@ class AS5048A:
         self.spi.unlock()
         tmp = time.time_ns()
         self.readtime = [tmp, tmp, tmp, tmp, tmp]
-        self.angle = [0, 0, 0, 0, 0]
+        self.angle = [0, 1, 2, 3, 4]
 
         self.on = True
         self.poll_delay = poll_delay
@@ -111,8 +111,6 @@ class AS5048A:
         angles, times = self.filter()
         r = angles / 0x3fff
         s = times / 1000000000
-        if s == 0:
-            return -1
         return r/s
 
     def shutdown(self):
