@@ -12,11 +12,17 @@ CMD_NOP = bytearray([0xc0,0x00])
 
 class AS5048A:
 
-    def __init__(self, poll_delay=0.00000035):
+    def __init__(self, poll_delay=0.000001):
         self.spi = busio.SPI(board.SCK, MISO=board.MISO)
         self.cs = digitalio.DigitalInOut(board.CE0)
         self.cs.direction = digitalio.Direction.OUTPUT
         self.cs.value = True
+        while not self.spi.try_lock():
+            pass
+        self.spi.configure(baudrate=3000000, polarity=0, phase=1)
+        self.spi.unlock()
+        tmp = time.time_ns()
+        self.readtime = [tmp, tmp, tmp, tmp]
 
         self.output = 0
         self.on = True
@@ -26,6 +32,10 @@ class AS5048A:
         while self.on:
             self.poll()
             time.sleep(self.poll_delay)
+
+    def time_append(self, nstime):
+        self.readtime.pop(0)
+        self.readtime.append(nstime)
 
     def spi_write_read(self, cmd):
         result = bytearray(2)
@@ -39,22 +49,17 @@ class AS5048A:
         while not self.spi.try_lock():
             pass
         try:
-            self.spi.configure(baudrate=3000000, polarity=0, phase=1)
-            # self.cs.value = False
+            # self.spi.configure(baudrate=3000000, polarity=0, phase=1)
             result = bytearray(2)
-            # self.spi.write_readinto(CMD_ANGLE, result)
-            # self.cs.value = True
-            # time.sleep(350 / 1000000000)
             self.spi_write_read(CMD_ANGLE)
             result = self.spi_write_read(CMD_NOP)
-
-            # self.cs.value = False
-            # self.spi.write_readinto(CMD_NOP, result)
-            # self.cs.value = True
             result0 = result[0] & 0x3f
             angle = (result0 << 8) + result[1]  # 0-0x3fff
 
             ### clear error flag
+            if result[0] & 0x40 > 0:
+                print('error flag clear')
+                self.spi_write_read(CMD_CLAER)
 
         finally:
             self.spi.unlock()
