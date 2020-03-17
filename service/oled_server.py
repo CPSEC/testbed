@@ -27,7 +27,7 @@ class OLED:
                      'icon': ImageFont.truetype('/home/pi/testbed/service/fa-solid-900.ttf', 16, encoding='unic')}
 
         # Content
-        self.content = {'icons': {'pi_bat': 0, 'car_bat': 0, 'relay': 0, 'power': 0},
+        self.content = {'icons': {'pi_bat': 0, 'car_bat': 0, 'relay': 1, 'power': 0},
                         'text': []}
 
         # Icons
@@ -73,13 +73,18 @@ class OLED:
         for text in texts:
             if len(text) > 21:
                 text = text[:21]
-            if len(self.content['text']) == 3:
+            if len(self.content['text']) == 6:
                 self.content['text'].pop(0)
             self.content['text'].append(text)
 
+def get_ip():
+    cmd = "hostname -I | cut -d\' \' -f1"
+    IP = subprocess.check_output(cmd, shell=True).decode("utf-8")
+    return IP
 
 if __name__ == '__main__':
     oled = OLED()
+    oled.text_append("IP"+get_ip())
     oled.display()
 
     from multiprocessing.connection import Listener
