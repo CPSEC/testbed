@@ -119,6 +119,7 @@ class AS5048A:
 
 if __name__ == "__main__":
     iter = 0
+    time.sleep(2)
     p = AS5048A()
     while iter < 100:
         output = p.run()
