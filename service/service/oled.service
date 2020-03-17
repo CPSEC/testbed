@@ -4,8 +4,8 @@ After=network.target
 
 [Service]
 Type=simple
-WorkingDirectory=/home/pi/service
-ExecStart=/home/pi/env/bin/python /home/pi/service/oled_server.py
+WorkingDirectory=/home/pi/testbed/service
+ExecStart=/home/pi/env/bin/python /home/pi/testbed/service/oled_server.py
 Restart=always
 
 [Install]
