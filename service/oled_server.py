@@ -80,6 +80,7 @@ class OLED:
 
 if __name__ == '__main__':
     oled = OLED()
+    oled.display()
 
     from multiprocessing.connection import Listener
 

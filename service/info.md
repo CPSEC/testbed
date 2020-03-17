@@ -56,19 +56,19 @@ sudo systemctl enable oled.service
    (Active: active，when success，press q to quit)
 + Stop service
   ```
-  systemctl stop test.service
+  systemctl stop oled.service
   ```
 + Start service
   ```
-  systemctl start test.service
+  systemctl start oled.service
   ```
 + Re-start service
   ```
-  systemctl restart test.service
+  systemctl restart oled.service
   ```
 + Command to debug service (log)：
   ```
-  journalctl -u service-name.service
-  journalctl -u service-name.service -b
-  journalctl -u service-name
+  journalctl -u oled.service
+  journalctl -u oled.service -b
+  journalctl -u oled
   ```
