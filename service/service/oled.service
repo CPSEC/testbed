@@ -1,0 +1,12 @@
+[Unit]
+Description=OLED Server
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/pi/service
+ExecStart=/home/pi/env/bin/python /home/pi/service/oled_server.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
