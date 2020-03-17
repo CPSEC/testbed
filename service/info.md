@@ -33,7 +33,7 @@ WantedBy=multi-user.target
 (press ESC, :x to save)\
 create a soft link 
 ```
-ln -s /home/pi/testbed/service/service/oled.service /lib/systemd/system/
+sudo ln -s /home/pi/testbed/service/service/oled.service /lib/systemd/system/
 ```
 
 Explanation：
@@ -43,15 +43,15 @@ Explanation：
 
 #### 2.Enable services
 ```
-sudo chmod 644 /lib/systemd/system/test.service
+sudo chmod 644 /lib/systemd/system/oled.service
 sudo systemctl daemon-reload
-sudo systemctl enable test.service
+sudo systemctl enable oled.service
 ```
 
 #### 3. Additional Commands (FRI)
 + Check service status
   ```
-  sudo systemctl status test.service
+  sudo systemctl status oled.service
   ```
    (Active: active，when success，press q to quit)
 + Stop service

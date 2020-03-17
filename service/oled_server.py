@@ -24,7 +24,7 @@ class OLED:
 
         # Set font
         self.font = {'text': ImageFont.load_default(),
-                     'icon': ImageFont.truetype('/home/pi/service/fa-solid-900.ttf', 16, encoding='unic')}
+                     'icon': ImageFont.truetype('/home/pi/testbed/service/fa-solid-900.ttf', 16, encoding='unic')}
 
         # Content
         self.content = {'icons': {'pi_bat': 0, 'car_bat': 0, 'relay': 0, 'power': 0},
