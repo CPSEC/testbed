@@ -57,7 +57,7 @@ class OLED:
         offset = 0
         for text in self.content['text']:
             x = 1
-            y = 39 + offset
+            y = 15 + offset
             draw.text((x, y), text, font=self.font['text'], fill=255)
             offset += 8
 
