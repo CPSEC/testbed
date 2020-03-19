@@ -73,7 +73,7 @@ types = ['float', 'float', 'float', 'int', 'float', 'float', 'float',
          'float', 'float']
 th = TubHandler(path=cfg.DATA_PATH)
 tub = th.new_tub_writer(inputs=inputs, types=types, user_meta=meta)
-V.add(tub, inputs=inputs, outputs=["tub/num_records"])
+V.add(tub, inputs=inputs, outputs=["tub/num_records"], run_condition='recording')
 
 # run the vehicle for 20 seconds
 V.start(rate_hz=cfg.DRIVE_LOOP_HZ,
