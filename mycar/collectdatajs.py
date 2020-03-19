@@ -60,13 +60,13 @@ V.add(throttle, inputs=['user/throttle'])
 
 # data save
 inputs = ['hcsr04', 'ads1115/vm', 'ads1115/vp', 'as5048a', "bno055/heading", "bno055/roll", "bno055/pitch",
-          "bno055/sys", "bno055/gyro", "bno055/accel", "bno055/mag", "bno055/ori_x", "bno055/ori_y", "bno055/ori_z",
+          "bno055/ori_x", "bno055/ori_y", "bno055/ori_z",
           "bno055/ori_w", "bno055/temp_c", "bno055/mag_x", "bno055/mag_y", "bno055/mag_z", "bno055/gyr_x",
           "bno055/gyr_y", "bno055/gyr_z", "bno055/acc_x", "bno055/acc_y", "bno055/acc_z", "bno055/lacc_x",
           "bno055/lacc_y", "bno055/lacc_z", "bno055/gra_x", "bno055/gra_y", "bno055/gra_z",
           'user/angle', 'user/throttle']
 types = ['float', 'float', 'float', 'int', 'float', 'float', 'float',
-         'float', 'float', 'float', 'float', 'float', 'float', 'float',
+         'float', 'float', 'float',
          'float', 'float', 'float', 'float', 'float', 'float',
          'float', 'float', 'float', 'float', 'float', 'float',
          'float', 'float', 'float', 'float', 'float',
