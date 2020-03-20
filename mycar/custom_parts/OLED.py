@@ -14,6 +14,7 @@ class OLED:
 
         self.last_recording = False
         self.recording = False
+        self.oprint('System -> ON')
 
     def update(self):
         while self.on:
@@ -24,9 +25,9 @@ class OLED:
         if recording != self.last_recording:
             self.last_recording = recording
             if recording:
-                self.oprint('Start recording.')
+                self.oprint('Recording -> ON')
             else:
-                self.oprint('Stop recording.')
+                self.oprint('Recording -> OFF')
 
     def run_threaded(self, recording):
         self.recording = recording
@@ -36,6 +37,7 @@ class OLED:
 
     def shutdown(self):
         self.on = False
+        self.oprint('System -> OFF')
 
     def send_data(self, icons=None, texts=None):
         address = ('localhost', self.port)
