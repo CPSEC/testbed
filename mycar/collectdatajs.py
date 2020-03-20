@@ -20,7 +20,7 @@ V = Vehicle()
 hcsr04 = HCSR04()
 V.add(hcsr04, outputs=['hcsr04'], threaded=True)
 
-ads1115 = ADS1115()
+ads1115 = ADS1115(coeff_m=cfg.VM_COEFFICIENT, coeff_p=cfg.VP_COEFFICIENT)
 V.add(ads1115, outputs=['ads1115/vm', 'ads1115/vp'], threaded=True)
 
 bno055 = BNO055()

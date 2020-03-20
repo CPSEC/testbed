@@ -7,7 +7,7 @@ from adafruit_ads1x15.analog_in import AnalogIn
 
 class ADS1115:
 
-    def __init__(self, poll_delay=0.01):
+    def __init__(self, coeff_m=1, coeff_p=1, poll_delay=0.01):
         # create I2C bus
         i2c = busio.I2C(board.SCL, board.SDA)
 
@@ -21,6 +21,8 @@ class ADS1115:
         self.chan_pi = AnalogIn(ads, POWER_CHANNEL_PI)
 
         self.poll_delay = poll_delay
+        self.coeff_m = coeff_m
+        self.coeff_p = coeff_p
         self.on = True
         self.vm = 0
         self.vp = 0
@@ -31,8 +33,8 @@ class ADS1115:
             time.sleep(self.poll_delay)
 
     def poll(self):
-        self.vm = self.chan_motor.voltage
-        self.vp = self.chan_pi.voltage
+        self.vm = self.chan_motor.value * self.coeff_m
+        self.vp = self.chan_pi.value * self.coeff_p
 
     def run_threaded(self):
         return self.vm, self.vp
@@ -48,8 +50,12 @@ class ADS1115:
 if __name__ == "__main__":
     iter = 0
     p = ADS1115()
-    while iter < 100:
-        data1, data2 = p.run()
-        print(data1, " ", data2)
-        time.sleep(0.01)
+    while iter < 3:
+        vmr = float(input('Motor voltage:'))
+        vm, vp = p.run()
+        print("vm=", vm, "  coeff_m=", vmr / vm)
+
+        vpr = float(input('Pi voltage:'))
+        vm, vp = p.run()
+        print("vp=", vp, "  coeff_p=", vpr / vp)
         iter += 1

@@ -234,3 +234,5 @@ RESET_ORIGIN_BTN = "triangle"       # joystick button to press to move car back 
 # NEW
 OLED_KEY = '7jogUVtgh5v@h^'
 OLED_PORT = 13202
+VM_COEFFICIENT = 1
+VP_COEFFICIENT = 1
