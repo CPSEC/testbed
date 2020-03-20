@@ -104,6 +104,8 @@ class AS5048A:
         angles, times = self.filter()
         r = angles/0x3fff
         s = times/1000000000
+        if s == 0:
+            s = 0.01
         return r/s
 
     def run(self):
