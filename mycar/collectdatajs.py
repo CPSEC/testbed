@@ -8,7 +8,7 @@ from custom_parts.HCSR04 import HCSR04
 from custom_parts.ADS1115 import ADS1115
 from custom_parts.BNO055 import BNO055
 from custom_parts.AS5048A import AS5048A
-
+from custom_parts.OLED import OLED
 
 import donkeycar as dk
 
@@ -57,6 +57,8 @@ throttle = PWMThrottle(controller=throttle_controller,
 V.add(steering, inputs=['user/angle'])
 V.add(throttle, inputs=['user/throttle'])
 
+oled = OLED(OLED_KEY=cfg.OLED_KEY, OLED_PORT=cfg.OLED_PORT)
+V.add(oled, inputs=['recording'])
 
 # data save
 inputs = ['hcsr04', 'ads1115/vm', 'ads1115/vp', 'as5048a', "bno055/heading", "bno055/roll", "bno055/pitch",
