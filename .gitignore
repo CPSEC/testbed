@@ -205,5 +205,5 @@ fabric.properties
 # Configfile - different for each car
 mycar/config.py
 mycar/myconfig.py
-mycar/calibration/calibration.json
+mycar/custom_parts/calibration.json
 

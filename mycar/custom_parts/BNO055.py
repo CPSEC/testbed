@@ -1,5 +1,7 @@
 import time
 from Adafruit_BNO055 import BNO055 as b
+import os
+import json
 
 
 class BNO055:
@@ -16,17 +18,30 @@ class BNO055:
         status, self_test, error = self.bno.get_system_status()
         print('System status: {0}'.format(status))
         print('Self test result (0x0F is normal): 0x{0:02X}'.format(self_test))
-        # # Print out an error if system status is in error mode.
-        # if status == 0x01:
-        #     print('System error: {0}'.format(error))
-        #     print('See datasheet section 4.3.59 for the meaning.')
-        # # Print BNO055 software revision and other diagnostic data.
-        # sw, bl, accel, mag, gyro = self.bno.get_revision()
-        # print('Software version:   {0}'.format(sw))
-        # print('Bootloader version: {0}'.format(bl))
-        # print('Accelerometer ID:   0x{0:02X}'.format(accel))
-        # print('Magnetometer ID:    0x{0:02X}'.format(mag))
-        # print('Gyroscope ID:       0x{0:02X}\n'.format(gyro))
+
+        # LOAD json
+        CALIBRATION_FILE = os.path.join(os.path.split(os.path.realpath(__file__))[0], 'calibration.json')
+        try:
+            with open(CALIBRATION_FILE, 'r') as cal_file:
+                data = json.load(cal_file)
+                self.bno.set_calibration(data)
+        except IOError:
+            print("404 - Calibration file not found")
+
+        # calibration process
+        calibrated = False
+        while not calibrated:
+            sys, gyro, accel, mag = self.bno.get_calibration_status()
+            print('sys=', sys, '  gyro=', gyro, '  accel=', accel, '  mag=', mag, end='\r', flush=True)
+            time.sleep(0.2)
+            if sys == 3 and gyro == 3 and accel == 3 and mag == 3:
+                calibrated = True
+        print('\nCalibration Complete!')
+
+        # save the lastest calibration json file
+        data = self.bno.get_calibration()
+        with open(CALIBRATION_FILE, 'w') as cal_file:
+            json.dump(data, cal_file)
 
         self.heading = self.roll = self.pitch = self.sys = self.gyro = self.accel = self.mag = \
             self.ori_x = self.ori_y = self.ori_z = self.ori_w = self.temp_c = self.mag_x = self.mag_y = \
