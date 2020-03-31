@@ -3,6 +3,7 @@ from donkeycar.parts.datastore import TubHandler
 from donkeycar.parts.controller import get_js_controller
 from donkeycar.parts.throttle_filter import ThrottleFilter
 from donkeycar.parts.actuator import PCA9685, PWMSteering, PWMThrottle
+from donkeycar.parts.camera import PiCamera
 
 from custom_parts.HCSR04 import HCSR04
 from custom_parts.ADS1115 import ADS1115
@@ -32,6 +33,9 @@ V.add(bno055, outputs=["bno055/heading", "bno055/roll", "bno055/pitch", "bno055/
 
 as5048a = AS5048A()
 V.add(as5048a, outputs=['as5048a'], threaded=True)
+
+cam = PiCamera(image_w=cfg.IMAGE_W, image_h=cfg.IMAGE_H, image_d=cfg.IMAGE_DEPTH)
+V.add(cam, inputs=[], outputs=['cam/image_array'], threaded=True)
 
 ctr = get_js_controller(cfg)
 V.add(ctr,
