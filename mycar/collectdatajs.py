@@ -10,6 +10,7 @@ from custom_parts.ADS1115 import ADS1115
 from custom_parts.BNO055 import BNO055
 from custom_parts.AS5048A import AS5048A
 from custom_parts.OLED import OLED
+from custom_parts.CSVDATA import CSVDATA
 
 import donkeycar as dk
 
@@ -77,9 +78,13 @@ types = ['float', 'float', 'float', 'int', 'float', 'float', 'float',
          'float', 'float', 'float', 'float', 'float', 'float',
          'float', 'float', 'float', 'float', 'float',
          'float', 'float']
-th = TubHandler(path=cfg.DATA_PATH)
-tub = th.new_tub_writer(inputs=inputs, types=types, user_meta=meta)
-V.add(tub, inputs=inputs, outputs=["tub/num_records"], run_condition='recording')
+# th = TubHandler(path=cfg.DATA_PATH)
+# tub = th.new_tub_writer(inputs=inputs, types=types, user_meta=meta)
+# V.add(tub, inputs=inputs, outputs=["tub/num_records"], run_condition='recording')
+# one csv file
+writer = CSVDATA(path=cfg.DATA_PATH, inputs=inputs)
+V.add(writer, inputs=inputs, run_condition='recording')
+
 
 # run the vehicle for 20 seconds
 V.start(rate_hz=cfg.DRIVE_LOOP_HZ,
