@@ -103,10 +103,12 @@ class AS5048A:
 if __name__ == "__main__":
     itr = 0
     as5048a = AS5048A()
-    while itr < 10000:
-        itr += 1
+    # while itr < 5000:
+    #     itr += 1
+    #     as5048a.run()
+    #     if itr % 20 == 0:
+    #         speed = as5048a.run_threaded()
+    #         print('speed=', speed, '\n')
+    while itr < 500:
         as5048a.run()
-        time.sleep(0.001)
-        if itr % 20 == 0:
-            speed = as5048a.run_threaded()
-            print('speed=', speed, '\n')
+        print(as5048a.angle)
