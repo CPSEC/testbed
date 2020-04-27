@@ -3,11 +3,11 @@ import busio
 import digitalio
 import time
 
-CMD_ANGLE = bytearray([0xff,0xff])
-CMD_AGC = bytearray([0x7f,0xfd])
-CMD_MAG = bytearray([0x7f,0xfe])
-CMD_CLAER = bytearray([0x42,0x01])
-CMD_NOP = bytearray([0xc0,0x00])
+CMD_ANGLE = bytearray([0xff, 0xff])
+CMD_AGC = bytearray([0x7f, 0xfd])
+CMD_MAG = bytearray([0x7f, 0xfe])
+CMD_CLAER = bytearray([0x42, 0x01])
+CMD_NOP = bytearray([0xc0, 0x00])
 
 
 class AS5048A:
@@ -27,8 +27,8 @@ class AS5048A:
         self.sampletime = 0
         self.last_angle = 0
         self.last_sampletime = 0
-        self.sum_angle=0
-        self.sum_time=0
+        self.sum_angle = 0
+        self.sum_time = 0
 
         self.on = True
         self.poll_delay = poll_delay
@@ -53,7 +53,7 @@ class AS5048A:
             self.spi_write_read(CMD_ANGLE)
             result = self.spi_write_read(CMD_NOP)
             result0 = result[0] & 0x3f
-            result1 = result[1] & 0xfc  # ignore the last two value
+            result1 = result[1] & 0xf8  # ignore the last three value
             self.angle = (result0 << 8) + result1  # 0-0x3fff
             self.sampletime = time.time_ns()
             # clear error flag
@@ -72,7 +72,7 @@ class AS5048A:
             self.angle = self.last_angle
             self.sampletime = self.last_sampletime
         else:
-            theta_angle = self.angle - self.last_angle
+            theta_angle = self.last_angle - self.angle
             # go through zero  (0x3fff=16383)
             if theta_angle < -10467:
                 theta_angle += 0x3ff
@@ -83,13 +83,13 @@ class AS5048A:
             self.sum_time += theta_time
 
     def run_threaded(self):
-        r = self.sum_angle/0x3fff
-        s = self.sum_time/1000000000
+        r = self.sum_angle / 0x3fff
+        s = self.sum_time / 1000000000
         if s == 0:
             s = 0.01  # impossible, just in case
         self.sum_angle = 0
         self.sum_time = 0
-        return r/s
+        return r / s
 
     def run(self):
         # do not expect use threaded=False
@@ -100,4 +100,11 @@ class AS5048A:
 
 
 if __name__ == "__main__":
-    pass
+    itr = 0
+    as5048a = AS5048A()
+    while itr < 10000:
+        itr += 1
+        as5048a.update()
+        if itr % 10 == 0:
+            speed = as5048a.run_threaded()
+            print('speed=', speed, '\n')
