@@ -44,10 +44,10 @@ PCA9685_I2C_BUSNUM = None   #None will auto detect, which is fine on the pi. But
 #SERVO_HBRIDGE_PWM use ServoBlaster to output pwm control from the PiZero directly to control steering, and HBridge for a drive motor.
 DRIVE_TRAIN_TYPE = "SERVO_ESC" # SERVO_ESC|DC_STEER_THROTTLE|DC_TWO_WHEEL|SERVO_HBRIDGE_PWM
 
-#STEERING
+#STEERING      280 - 337 - 394
 STEERING_CHANNEL = 11            #channel on the 9685 pwm board 0-15
-STEERING_LEFT_PWM = 240         #pwm value for full left steering
-STEERING_RIGHT_PWM = 420        #pwm value for full right steering
+STEERING_LEFT_PWM = 280         #pwm value for full left steering
+STEERING_RIGHT_PWM = 394        #pwm value for full right steering
 
 #THROTTLE   245.76-368.55-491.52
 THROTTLE_CHANNEL = 15            #channel on the 9685 pwm board 0-15
