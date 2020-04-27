@@ -36,7 +36,6 @@ class AS5048A:
     def update(self):
         while self.on:
             self.poll()
-            print('.')
             time.sleep(self.poll_delay)
 
     def spi_write_read(self, cmd):
@@ -94,7 +93,8 @@ class AS5048A:
 
     def run(self):
         # do not expect use threaded=False
-        raise ValueError
+        self.poll()
+        time.sleep(self.poll_delay)
 
     def shutdown(self):
         self.on = False
@@ -105,7 +105,7 @@ if __name__ == "__main__":
     as5048a = AS5048A()
     while itr < 10000:
         itr += 1
-        as5048a.update()
+        as5048a.run()
         if itr % 20 == 0:
             speed = as5048a.run_threaded()
             print('speed=', speed, '\n')
