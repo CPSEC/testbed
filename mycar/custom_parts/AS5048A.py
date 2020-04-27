@@ -21,9 +21,14 @@ class AS5048A:
             pass
         self.spi.configure(baudrate=3000000, polarity=0, phase=1)
         self.spi.unlock()
-        tmp = time.time_ns()
-        self.readtime = [tmp, tmp, tmp, tmp, tmp]
-        self.angle = [0, 1, 2, 3, 4]
+
+        # data
+        self.angle = 0
+        self.sampletime = 0
+        self.last_angle = 0
+        self.last_sampletime = 0
+        self.sum_angle=0
+        self.sum_time=0
 
         self.on = True
         self.poll_delay = poll_delay
@@ -32,10 +37,6 @@ class AS5048A:
         while self.on:
             self.poll()
             time.sleep(self.poll_delay)
-
-    def pop_append(self, lst, data):
-        lst.pop(0)
-        lst.append(data)
 
     def spi_write_read(self, cmd):
         result = bytearray(2)
@@ -49,82 +50,54 @@ class AS5048A:
         while not self.spi.try_lock():
             pass
         try:
-            result = bytearray(2)
             self.spi_write_read(CMD_ANGLE)
             result = self.spi_write_read(CMD_NOP)
             result0 = result[0] & 0x3f
-            angle = (result0 << 8) + result[1]  # 0-0x3fff
-
-            self.pop_append(self.readtime, time.time_ns())
-            self.pop_append(self.angle, angle)
-
-            ### clear error flag
+            result1 = result[1] & 0xfc  # ignore the last two value
+            self.angle = (result0 << 8) + result1  # 0-0x3fff
+            self.sampletime = time.time_ns()
+            # clear error flag
             if result[0] & 0x40 > 0:
                 print('error flag clear')
                 self.spi_write_read(CMD_CLAER)
-
         finally:
             self.spi.unlock()
 
     def poll(self):
+        self.last_angle = self.angle
+        self.last_sampletime = self.sampletime
         self.get_angle()
-
-    def filter(self):
-        def get_interval(lst):
-            interval = []
-            for i in range(len(lst)-1):
-                interval.append(lst[i+1]-lst[i])
-            return interval
-        # get intervals
-        angle_interval = get_interval(self.angle)
-        time_interval = get_interval(self.readtime)
-        # get majority
-        positive_num = 0
-        positive = False
-        for x in angle_interval:
-            if x > 0:
-                positive_num += 1
-        if positive_num>2:
-            positive = True
-        # save majority
-        angles = 0
-        times = 0
-        for i in range(len(angle_interval)):
-            if positive:
-                if angle_interval[i]<0:
-                    continue
-            else:
-                if angle_interval[i]>0:
-                    continue
-            angles += angle_interval[i]
-            times += time_interval[i]
-        return angles, times
+        if self.angle == 0:
+            # did not get value, pass this poll
+            self.angle = self.last_angle
+            self.sampletime = self.last_sampletime
+        else:
+            theta_angle = self.angle - self.last_angle
+            # go through zero  (0x3fff=16383)
+            if theta_angle < -10467:
+                theta_angle += 0x3ff
+            if theta_angle > 10467:
+                theta_angle -= 0x3ff
+            self.sum_angle += theta_angle
+            theta_time = self.sampletime - self.last_sampletime
+            self.sum_time += theta_time
 
     def run_threaded(self):
-        angles, times = self.filter()
-        r = angles/0x3fff
-        s = times/1000000000
+        r = self.sum_angle/0x3fff
+        s = self.sum_time/1000000000
         if s == 0:
-            s = 0.01
+            s = 0.01  # impossible, just in case
+        self.sum_angle = 0
+        self.sum_time = 0
         return r/s
 
     def run(self):
-        self.poll()
-        angles, times = self.filter()
-        r = angles / 0x3fff
-        s = times / 1000000000
-        return r/s
+        # do not expect use threaded=False
+        raise ValueError
 
     def shutdown(self):
         self.on = False
 
 
 if __name__ == "__main__":
-    iter = 0
-    time.sleep(2)
-    p = AS5048A()
-    while iter < 100:
-        output = p.run()
-        print(output)
-        time.sleep(0.001)
-        iter += 1
+    pass
