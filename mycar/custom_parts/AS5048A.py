@@ -103,6 +103,7 @@ if __name__ == "__main__":
     itr = 0
     as5048a = AS5048A()
     while itr < 10000:
+        print('.')
         itr += 1
         as5048a.update()
         if itr % 20 == 0:
