@@ -75,9 +75,9 @@ class AS5048A:
             theta_angle = self.last_angle - self.angle
             # go through zero  (0x3fff=16383)
             if theta_angle < -10467:
-                theta_angle += 0x3ff
+                theta_angle += 0x3fff
             if theta_angle > 10467:
-                theta_angle -= 0x3ff
+                theta_angle -= 0x3fff
             self.sum_angle += theta_angle
             theta_time = self.sampletime - self.last_sampletime
             self.sum_time += theta_time
@@ -103,12 +103,13 @@ class AS5048A:
 if __name__ == "__main__":
     itr = 0
     as5048a = AS5048A()
-    # while itr < 5000:
-    #     itr += 1
-    #     as5048a.run()
-    #     if itr % 20 == 0:
-    #         speed = as5048a.run_threaded()
-    #         print('speed=', speed, '\n')
-    while itr < 500:
+    while itr < 5000:
+        itr += 1
         as5048a.run()
-        print(as5048a.angle)
+        if itr % 20 == 0:
+            speed = as5048a.run_threaded()
+            print('speed=', speed, '\n')
+    # while itr < 500:
+    #     as5048a.run()
+    #     print(as5048a.angle)
+    #     itr += 1
