@@ -36,6 +36,7 @@ class AS5048A:
     def update(self):
         while self.on:
             self.poll()
+            print('.')
             time.sleep(self.poll_delay)
 
     def spi_write_read(self, cmd):
@@ -103,7 +104,6 @@ if __name__ == "__main__":
     itr = 0
     as5048a = AS5048A()
     while itr < 10000:
-        print('.')
         itr += 1
         as5048a.update()
         if itr % 20 == 0:
