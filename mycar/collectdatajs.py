@@ -20,7 +20,7 @@ meta = []
 V = Vehicle()
 
 hcsr04 = HCSR04()
-V.add(hcsr04, outputs=['hcsr04'])
+V.add(hcsr04, outputs=['hcsr04'], threaded=True)
 
 ads1115 = ADS1115(coeff_m=cfg.VM_COEFFICIENT, coeff_p=cfg.VP_COEFFICIENT)
 V.add(ads1115, outputs=['ads1115/vm', 'ads1115/vp'])
@@ -36,7 +36,7 @@ as5048a = AS5048A()
 V.add(as5048a, outputs=['as5048a'], threaded=True)
 
 cam = PiCamera(image_w=cfg.IMAGE_W, image_h=cfg.IMAGE_H, image_d=cfg.IMAGE_DEPTH)
-V.add(cam, inputs=[], outputs=['cam/image_array'])
+V.add(cam, inputs=[], outputs=['cam/image_array'], threaded=True)
 
 ctr = get_js_controller(cfg)
 V.add(ctr,
