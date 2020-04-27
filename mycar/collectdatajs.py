@@ -20,23 +20,23 @@ meta = []
 V = Vehicle()
 
 hcsr04 = HCSR04()
-V.add(hcsr04, outputs=['hcsr04'], threaded=True)
+V.add(hcsr04, outputs=['hcsr04'])
 
 ads1115 = ADS1115(coeff_m=cfg.VM_COEFFICIENT, coeff_p=cfg.VP_COEFFICIENT)
-V.add(ads1115, outputs=['ads1115/vm', 'ads1115/vp'], threaded=True)
+V.add(ads1115, outputs=['ads1115/vm', 'ads1115/vp'])
 
 bno055 = BNO055()
 V.add(bno055, outputs=["bno055/heading", "bno055/roll", "bno055/pitch", "bno055/sys", "bno055/gyro", "bno055/accel",
                        "bno055/mag", "bno055/ori_x", "bno055/ori_y", "bno055/ori_z", "bno055/ori_w", "bno055/temp_c",
                        "bno055/mag_x", "bno055/mag_y", "bno055/mag_z", "bno055/gyr_x", "bno055/gyr_y", "bno055/gyr_z",
                        "bno055/acc_x", "bno055/acc_y", "bno055/acc_z", "bno055/lacc_x", "bno055/lacc_y",
-                       "bno055/lacc_z", "bno055/gra_x", "bno055/gra_y", "bno055/gra_z"], threaded=True)
+                       "bno055/lacc_z", "bno055/gra_x", "bno055/gra_y", "bno055/gra_z"])
 
 as5048a = AS5048A()
 V.add(as5048a, outputs=['as5048a'], threaded=True)
 
 cam = PiCamera(image_w=cfg.IMAGE_W, image_h=cfg.IMAGE_H, image_d=cfg.IMAGE_DEPTH)
-V.add(cam, inputs=[], outputs=['cam/image_array'], threaded=True)
+V.add(cam, inputs=[], outputs=['cam/image_array'])
 
 ctr = get_js_controller(cfg)
 V.add(ctr,
@@ -78,9 +78,11 @@ types = ['float', 'float', 'float', 'int', 'float', 'float', 'float',
          'float', 'float', 'float', 'float', 'float', 'float',
          'float', 'float', 'float', 'float', 'float',
          'float', 'float']
+
 # th = TubHandler(path=cfg.DATA_PATH)
 # tub = th.new_tub_writer(inputs=inputs, types=types, user_meta=meta)
 # V.add(tub, inputs=inputs, outputs=["tub/num_records"], run_condition='recording')
+
 # one csv file
 writer = CSVDATA(path=cfg.DATA_PATH, inputs=inputs)
 V.add(writer, inputs=inputs, run_condition='recording')
