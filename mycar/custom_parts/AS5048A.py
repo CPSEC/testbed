@@ -106,6 +106,7 @@ if __name__ == "__main__":
     while itr < 10000:
         itr += 1
         as5048a.run()
+        time.sleep(0.001)
         if itr % 20 == 0:
             speed = as5048a.run_threaded()
             print('speed=', speed, '\n')
