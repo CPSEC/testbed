@@ -14,11 +14,15 @@ CMD_MAG = bytearray([0x7f,0xfe])
 CMD_CLAER = bytearray([0x42,0x01])
 CMD_NOP = bytearray([0xc0,0x00])
 
+file = open('angle.csv', 'w+')
+
+itr = 0
+
 while not spi.try_lock():
     pass
 try:
     try:
-        while(True):
+        while(itr<10000):
             spi.configure(baudrate=10000000, polarity=0, phase=1)
             cs.value = False
             result = bytearray(2)
@@ -31,10 +35,12 @@ try:
             result[0] = result[0]&0x3f
             output = (result[0]<<8)+result[1]
             angle = output / 0x3fff * 360
-            print('output={:0>14b}'.format(output))
-            print('angle={:.3f}'.format(angle))
-            time.sleep(0.5)
+            file.write(str(angle)+'\n')
+            # print('output={:0>14b}'.format(output))
+            # print('angle={:.3f}'.format(angle))
+            time.sleep(0.001)
+            itr += 1
     finally:
         spi.unlock()
 finally:
-    pass
+    file.close()
