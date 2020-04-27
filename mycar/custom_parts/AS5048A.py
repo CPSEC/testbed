@@ -53,7 +53,7 @@ class AS5048A:
             self.spi_write_read(CMD_ANGLE)
             result = self.spi_write_read(CMD_NOP)
             result0 = result[0] & 0x3f
-            result1 = result[1] & 0xf8  # ignore the last three value
+            result1 = result[1] & 0xf0  # ignore the last four value
             self.angle = (result0 << 8) + result1  # 0-0x3fff
             self.sampletime = time.time_ns()
             # clear error flag
