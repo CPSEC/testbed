@@ -16,7 +16,7 @@ class CSVDATA():
      Do NOT run as thread
     """
 
-    def __init__(self, path, inputs, poll_delay=0.01):
+    def __init__(self, path, inputs, poll_delay=1.1):
         self.on = True
         self.poll_delay = poll_delay
         self.inputs = inputs
@@ -27,8 +27,12 @@ class CSVDATA():
         if not exists:
             os.makedirs(self.path)
 
-        self.last_time = 0
         self.filepath = ''
+        self.createfile = True
+        self.buff1 = []
+        self.buff2 = []
+        self.currentbuff = self.buff1
+        self.lastbuff = self.buff2
 
     def newfile(self):
         self.index = 0
@@ -42,30 +46,49 @@ class CSVDATA():
             writer = csv.writer(csvfile)
             header = ['index', 'milliseconds'] + self.inputs
             writer.writerow(header)
-
-    def test(self):
-        pass
+            csvfile.flush()
 
     def run(self, *args):
+        pass
+
+    def taketurn(self, buff):
+        if buff == self.buff1:
+            return self.buff2
+        else:
+            return self.buff1
+
+    def poll(self):
+        # buffer take turn
+        self.lastbuff = self.currentbuff
+        self.currentbuff = self.taketurn(self.currentbuff)
+
+        if len(self.lastbuff) == 0:
+            # if detect pause, create new file
+            self.createfile = True
+        else:
+            if self.createfile == True:
+                self.newfile()
+                self.createfile = False
+            with open(self.filepath, 'a+', newline='') as csvfile:
+                writer = csv.writer(csvfile)
+                writer.writerows(self.lastbuff)
+                csvfile.flush()
+            self.lastbuff.clear()
+
+    def update(self):
+        while self.on:
+            self.poll()
+            time.sleep(self.poll_delay)
+
+    def run_threaded(self, *args):
         assert len(self.inputs) == len(args)
         current_time = time.time()
-        if current_time - self.last_time > 1:
-            self.newfile()
-        self.poll(current_time, args)
-        self.last_time = current_time
-        # Call in the control loop
-        # Works when threaded=False
-        # Input is parameters, Return your output
-
-    def poll(self, current_time, args):
-        with open(self.filepath, 'a+', newline='') as csvfile:
-            writer = csv.writer(csvfile)
-            row = []
-            self.index += 1
-            row.append(self.index)
-            row.append(current_time)
-            row.extend(list(args))
-            writer.writerow(row)
+        row = []
+        self.index += 1
+        row.append(self.index)
+        row.append(current_time)
+        row.extend(list(args))
+        self.currentbuff.append(row)
 
 
 # test
@@ -75,12 +98,38 @@ if __name__ == "__main__":
     iter = 0
     t = CSVDATA(path, inputs)
     while iter < 3:
-        t.run(1, 2, 3)
+        t.run_threaded(1,2,3)
         iter += 1
-        time.sleep(0.5)
-    time.sleep(1)
-    iter = 0
-    while iter < 3:
-        t.run(4, 5, 6)
+    print(t.currentbuff == t.buff1)
+    t.poll()
+    while iter < 6:
+        t.run_threaded(4,5,6)
         iter += 1
-        time.sleep(0.5)
+    print(t.currentbuff == t.buff1)
+    t.poll()
+    while iter < 9:
+        t.run_threaded(7,8,9)
+        iter += 1
+    print(t.currentbuff == t.buff1)
+    t.poll()
+    print(t.currentbuff == t.buff1)
+
+
+    t.poll()
+    print(t.currentbuff == t.buff1)
+    t.poll()
+    while iter < 12:
+        t.run_threaded(1, 2, 3)
+        iter += 1
+    print(t.currentbuff == t.buff1)
+    t.poll()
+    while iter < 15:
+        t.run_threaded(4, 5, 6)
+        iter += 1
+    print(t.currentbuff == t.buff1)
+    t.poll()
+    while iter < 18:
+        t.run_threaded(7, 8, 9)
+        iter += 1
+    print(t.currentbuff == t.buff1)
+    t.poll()
