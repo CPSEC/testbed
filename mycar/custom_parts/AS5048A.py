@@ -12,7 +12,7 @@ CMD_NOP = bytearray([0xc0, 0x00])
 
 class AS5048A:
 
-    def __init__(self, poll_delay=0.0001):
+    def __init__(self, poll_delay=0.000001):
         self.spi = busio.SPI(board.SCK, MISO=board.MISO)
         self.cs = digitalio.DigitalInOut(board.CE0)
         self.cs.direction = digitalio.Direction.OUTPUT
