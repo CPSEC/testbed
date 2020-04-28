@@ -154,6 +154,7 @@ class speed:
 if __name__ == "__main__":
     iter = 0
     t = speed()
+    time.sleep(1)
     while iter < 10:
         time.sleep(0.01)
         data = t.run()
