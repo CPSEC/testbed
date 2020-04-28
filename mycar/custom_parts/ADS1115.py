@@ -7,7 +7,7 @@ from adafruit_ads1x15.analog_in import AnalogIn
 
 class ADS1115:
 
-    def __init__(self, coeff_m=1, coeff_p=1, poll_delay=0.01):
+    def __init__(self, coeff_m=1, coeff_p=1, poll_delay=2.5):
         # create I2C bus
         i2c = busio.I2C(board.SCL, board.SDA)
 

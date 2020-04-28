@@ -6,7 +6,7 @@ import time
 
 class OLED:
 
-    def __init__(self, OLED_KEY='', OLED_PORT=0, poll_delay=0.1):
+    def __init__(self, OLED_KEY='', OLED_PORT=0, poll_delay=0.2):
         self.authkey = OLED_KEY
         self.port = OLED_PORT
         self.poll_delay = poll_delay
