@@ -11,6 +11,7 @@ CMD_MAG = bytearray([0x7f, 0xfe])
 CMD_CLAER = bytearray([0x42, 0x01])
 CMD_NOP = bytearray([0xc0, 0x00])
 
+
 class AS5048A:
     def __init__(self):
         self.spi = busio.SPI(board.SCK, MISO=board.MISO)
@@ -51,6 +52,9 @@ class AS5048A:
 
 
 def feed_position(b1p, b1t, b2p, b2t, b1n, b2n, cbn):
+    bp = b1p
+    bt = b1t
+    bn = b1n
     as5048a = AS5048A()
     idx = 0
     lb = -1
@@ -89,8 +93,8 @@ class speed:
         self.poll_delay = poll_delay
 
         # create shared memory
-        self.buff1_position = multiprocessing.Array('i',50)
-        self.buff1_time = multiprocessing.Array('i',50)
+        self.buff1_position = multiprocessing.Array('i', 50)
+        self.buff1_time = multiprocessing.Array('i', 50)
         self.buff1_num = multiprocessing.Value('i')
         self.buff2_position = multiprocessing.Array('i', 50)
         self.buff2_time = multiprocessing.Array('i', 50)
@@ -103,7 +107,6 @@ class speed:
                                                                 self.buff2_position, self.buff2_time,
                                                                 self.buff1_num, self.buff2_num, self.current_buff))
         p.start()
-
 
     def run(self):
         # inform the subprocess change buffer
@@ -118,15 +121,17 @@ class speed:
             bp = self.buff2_position
             bt = self.buff2_time
             bn = self.buff2_num.value
-        theta_p = [bp[idx]-bp[idx+1] for idx in range(bn-1)]
+        theta_p = [bp[idx] - bp[idx + 1] for idx in range(bn - 1)]
+
         def filter(theta_angle):
             if theta_angle < -10467:
                 theta_angle += 0x3fff
             if theta_angle > 10467:
                 theta_angle -= 0x3fff
+
         theta_p = [filter(p) for p in theta_p]
-        theta_t = [bt[idx+1]-bt[idx] for idx in range(bn-1)]
-        result = (sum(theta_p)/0x3fff)/(sum(theta_t)/1000000000)
+        theta_t = [bt[idx + 1] - bt[idx] for idx in range(bn - 1)]
+        result = (sum(theta_p) / 0x3fff) / ((sum(theta_t)+1) / 1000000000)
         return result
 
     def shutdown(self):
@@ -150,7 +155,7 @@ if __name__ == "__main__":
     iter = 0
     t = speed()
     while iter < 10:
+        time.sleep(0.01)
         data = t.run()
         print(data)
         iter += 1
-        time.sleep(0.01)
