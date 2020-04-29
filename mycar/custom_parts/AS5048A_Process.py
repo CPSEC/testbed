@@ -102,7 +102,6 @@ class speed:
         self.buff2_num = multiprocessing.Value('i')
         self.current_buff = multiprocessing.Value('i')
         self.current_buff.value = 1
-        self.bn = 0
 
         # create process
         p = multiprocessing.Process(target=feed_position, args=(self.buff1_position, self.buff1_time,
@@ -117,13 +116,13 @@ class speed:
             self.current_buff.value = 2
             bp = self.buff1_position
             bt = self.buff1_time
-            self.bn = self.buff1_num.value
+            bn = self.buff1_num.value
         else:
             self.current_buff.value = 1
             bp = self.buff2_position
             bt = self.buff2_time
-            self.bn = self.buff2_num.value
-        theta_p = [bp[idx] - bp[idx + 1] for idx in range(self.bn - 1)]
+            bn = self.buff2_num.value
+        theta_p = [bp[idx] - bp[idx + 1] for idx in range(bn - 1)]
 
         def filter(theta_angle):
             if theta_angle < -10467:
@@ -132,9 +131,11 @@ class speed:
                 theta_angle -= 0x3fff
 
         theta_p = [filter(p) for p in theta_p]
-        theta_t = [bt[idx + 1] - bt[idx] for idx in range(self.bn - 1)]
+        print('num=', bn, '  theta_p=', theta_p)
+
+        theta_t = [bt[idx + 1] - bt[idx] for idx in range(bn - 1)]
         result = (sum(theta_p) / 0x3fff) / ((sum(theta_t)+1) / 1000000000)
-        print('theta_p=', theta_p)
+
         return result
 
     def shutdown(self):
@@ -160,7 +161,6 @@ if __name__ == "__main__":
     time.sleep(1)
     while iter < 10:
         time.sleep(0.01)
-        print('num=', t.bn, '  ', end='')
         data = t.run()
         print('data=', data)
         iter += 1
