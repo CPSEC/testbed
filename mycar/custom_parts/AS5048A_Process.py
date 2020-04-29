@@ -82,6 +82,7 @@ def feed_position(b1p, b1t, b2p, b2t, b1n, b2n, cbn):
         bp[idx] = as5048a.angle
         bt[idx] = as5048a.sampletime
         bn.value = idx
+        print('current_buff=', cbn.value, '  idx=', bn.value, '\r', end='')
 
         idx += 1
 
@@ -133,6 +134,7 @@ class speed:
         theta_p = [filter(p) for p in theta_p]
         theta_t = [bt[idx + 1] - bt[idx] for idx in range(self.bn - 1)]
         result = (sum(theta_p) / 0x3fff) / ((sum(theta_t)+1) / 1000000000)
+        print('theta_p=', theta_p)
         return result
 
     def shutdown(self):
