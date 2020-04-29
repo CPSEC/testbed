@@ -138,18 +138,19 @@ class speed:
 
         theta_p = []
         theta_t = []
-        for i in range(bn-1):
-            theta_t_i = t[i+1]-t[i]
+        for i in range(bn - 1):
+            theta_t_i = t[i + 1] - t[i]
             # remove tasks missing deadline
             if theta_t_i > 2500000:
                 continue
             theta_t.append(theta_t_i)
-            theta_p_i = filter(p[i]-p[i+1])
+            theta_p_i = filter(p[i] - p[i + 1])
             theta_p.append(theta_p_i)
 
-        # print('num=', bn, '  theta_p=', theta_p)
-        # print('num=', bn, '  theta_p=', theta_t)
-        result = (sum(theta_p) / 0x3fff) / ((sum(theta_t)+1) / 1000000000)
+        result = (sum(theta_p) / 0x3fff) / ((sum(theta_t) + 1) / 1000000000)
+        if result < 0:
+            print('num=', bn, '  theta_p=', theta_p)
+            print('num=', bn, '  theta_p=', theta_t)
 
         return result
 
