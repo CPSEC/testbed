@@ -40,7 +40,7 @@ class AS5048A:
             self.spi_write_read(CMD_ANGLE)
             result = self.spi_write_read(CMD_NOP)
             result0 = result[0] & 0x3f
-            result1 = result[1] & 0xf0  # ignore the last four value
+            result1 = result[1] & 0xe0  # ignore the last five value for noise
             self.angle = (result0 << 8) + result1  # 0-0x3fff
             self.sampletime = time.time_ns()
             # clear error flag
@@ -75,7 +75,7 @@ def feed_position(b1p, b1t, b2p, b2t, b1n, b2n, cbn):
         lb = cbn.value
 
         # avoid overflow
-        if idx > 49:
+        if idx > 99:
             continue
 
         as5048a.get_angle()
@@ -96,11 +96,11 @@ class speed:
         self.poll_delay = poll_delay
 
         # create shared memory
-        self.buff1_position = multiprocessing.Array('i', 50)
-        self.buff1_time = multiprocessing.Array('i', 50)
+        self.buff1_position = multiprocessing.Array('i', 100)
+        self.buff1_time = multiprocessing.Array('i', 100)
         self.buff1_num = multiprocessing.Value('i')
-        self.buff2_position = multiprocessing.Array('i', 50)
-        self.buff2_time = multiprocessing.Array('i', 50)
+        self.buff2_position = multiprocessing.Array('i', 100)
+        self.buff2_time = multiprocessing.Array('i', 100)
         self.buff2_num = multiprocessing.Value('i')
         self.current_buff = multiprocessing.Value('i')
         self.current_buff.value = 1
@@ -141,16 +141,16 @@ class speed:
         for i in range(bn - 1):
             theta_t_i = t[i + 1] - t[i]
             # remove tasks missing deadline
-            if theta_t_i > 2500000:
+            if theta_t_i > 2500000 or theta_t_i < 0:
                 continue
             theta_t.append(theta_t_i)
             theta_p_i = filter(p[i] - p[i + 1])
             theta_p.append(theta_p_i)
 
         result = (sum(theta_p) / 0x3fff) / ((sum(theta_t) + 1) / 1000000000)
-        if result < 0:
-            print('num=', bn, '  theta_p=', theta_p)
-            print('num=', bn, '  theta_p=', theta_t)
+        # if result < 0:
+        #     print('num=', bn, '  theta_p=', theta_p)
+        #     print('num=', bn, '  theta_p=', theta_t)
 
         return result
 
