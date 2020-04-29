@@ -125,12 +125,14 @@ class speed:
         p = bp[:bn]
         t = bt[:bn]
 
-        theta_p = [p[i]-p[i+1] for i in range(bn-1)]
         def filter(theta_angle):
             if theta_angle < -10467:
                 theta_angle += 0x3fff
             if theta_angle > 10467:
                 theta_angle -= 0x3fff
+            return theta_angle
+
+        theta_p = [p[i]-p[i+1] for i in range(bn-1)]
         theta_p = [filter(p) for p in theta_p]
         theta_t = [t[i+1]-t[i] for i in range(bn-1)]
 
