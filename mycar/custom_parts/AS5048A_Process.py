@@ -81,10 +81,9 @@ def feed_position(b1p, b1t, b2p, b2t, b1n, b2n, cbn):
         as5048a.get_angle()
         bp[idx] = as5048a.angle
         bt[idx] = as5048a.sampletime
-        bn.value = idx
         print('current_buff=', cbn.value, '  idx=', bn.value, ' angle=', bp[idx])
-
         idx += 1
+        bn.value = idx
 
 
 class speed:
@@ -122,6 +121,9 @@ class speed:
             bp = self.buff2_position
             bt = self.buff2_time
             bn = self.buff2_num.value
+
+        print(bp[:bn])
+        return 0
         theta_p = [bp[idx] - bp[idx + 1] for idx in range(bn - 1)]
 
         def filter(theta_angle):
