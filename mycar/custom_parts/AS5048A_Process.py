@@ -82,7 +82,7 @@ def feed_position(b1p, b1t, b2p, b2t, b1n, b2n, cbn):
         bp[idx] = as5048a.angle
         bt[idx] = as5048a.sampletime
         bn.value = idx
-        print('current_buff=', cbn.value, '  idx=', bn.value, '\r', end='')
+        print('current_buff=', cbn.value, '  idx=', bn.value, ' angle=', bp[idx])
 
         idx += 1
 
