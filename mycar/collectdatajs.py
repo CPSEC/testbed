@@ -8,7 +8,7 @@ from donkeycar.parts.camera import PiCamera
 from custom_parts.HCSR04 import HCSR04
 from custom_parts.ADS1115 import ADS1115
 from custom_parts.BNO055 import BNO055
-from custom_parts.AS5048A import AS5048A
+from custom_parts.AS5048A_Process import speed
 from custom_parts.OLED import OLED
 from custom_parts.CSVDATA import CSVDATA
 
@@ -32,8 +32,11 @@ V.add(bno055, outputs=["bno055/heading", "bno055/roll", "bno055/pitch", "bno055/
                        "bno055/acc_x", "bno055/acc_y", "bno055/acc_z", "bno055/lacc_x", "bno055/lacc_y",
                        "bno055/lacc_z", "bno055/gra_x", "bno055/gra_y", "bno055/gra_z"], threaded=True)
 
-as5048a = AS5048A()
-V.add(as5048a, outputs=['as5048a'], threaded=True)
+# as5048a = AS5048A()
+# V.add(as5048a, outputs=['as5048a'], threaded=True)
+as5048a = speed()
+V.add(as5048a, outputs=['as5048a'])
+
 
 cam = PiCamera(image_w=cfg.IMAGE_W, image_h=cfg.IMAGE_H, image_d=cfg.IMAGE_DEPTH)
 V.add(cam, inputs=[], outputs=['cam/image_array'], threaded=True)
