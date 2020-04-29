@@ -59,7 +59,7 @@ def feed_position(b1p, b1t, b2p, b2t, b1n, b2n, cbn):
     idx = 0
     lb = -1
     while True:
-        time.sleep(0.001)
+        time.sleep(0.0005)
 
         if cbn.value != lb:
             # switch buffer
@@ -143,8 +143,9 @@ class speed:
             # remove tasks missing deadline
             if theta_t_i > 2500000 or theta_t_i < 0:
                 continue
-            theta_t.append(theta_t_i)
             theta_p_i = filter(p[i] - p[i + 1])
+
+            theta_t.append(theta_t_i)
             theta_p.append(theta_p_i)
 
         result = (sum(theta_p) / 0x3fff) / ((sum(theta_t) + 1) / 1000000000)
