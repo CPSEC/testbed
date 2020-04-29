@@ -106,6 +106,7 @@ class speed:
         p = multiprocessing.Process(target=feed_position, args=(self.buff1_position, self.buff1_time,
                                                                 self.buff2_position, self.buff2_time,
                                                                 self.buff1_num, self.buff2_num, self.current_buff))
+        p.daemon = True
         p.start()
 
     def run(self):
