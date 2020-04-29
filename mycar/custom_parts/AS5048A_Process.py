@@ -136,8 +136,8 @@ class speed:
         theta_p = [filter(p) for p in theta_p]
         theta_t = [t[i+1]-t[i] for i in range(bn-1)]
 
-        print('num=', bn, '  theta_p=', theta_p)
-        print('num=', bn, '  theta_p=', theta_t)
+        # print('num=', bn, '  theta_p=', theta_p)
+        # print('num=', bn, '  theta_p=', theta_t)
         result = (sum(theta_p) / 0x3fff) / ((sum(theta_t)+1) / 1000000000)
 
         return result
