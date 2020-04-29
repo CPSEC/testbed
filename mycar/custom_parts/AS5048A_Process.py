@@ -79,6 +79,9 @@ def feed_position(b1p, b1t, b2p, b2t, b1n, b2n, cbn):
             continue
 
         as5048a.get_angle()
+        # did not get the value actually
+        if as5048a.angle == 0:
+            continue
         bp[idx] = as5048a.angle
         bt[idx] = as5048a.sampletime
         # print('current_buff=', cbn.value, '  idx=', bn.value, ' angle=', bp[idx])
@@ -133,9 +136,16 @@ class speed:
                 theta_angle -= 0x3fff
             return theta_angle
 
-        theta_p = [p[i]-p[i+1] for i in range(bn-1)]
-        theta_p = [filter(p) for p in theta_p]
-        theta_t = [t[i+1]-t[i] for i in range(bn-1)]
+        theta_p = []
+        theta_t = []
+        for i in range(bn-1):
+            theta_t_i = t[i+1]-t[i]
+            # remove tasks missing deadline
+            if theta_t_i > 2500000:
+                continue
+            theta_t.append(theta_t_i)
+            theta_p_i = filter(p[i]-p[i+1])
+            theta_p.append(theta_p_i)
 
         # print('num=', bn, '  theta_p=', theta_p)
         # print('num=', bn, '  theta_p=', theta_t)
