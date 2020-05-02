@@ -38,8 +38,8 @@ as5048a = speed()
 V.add(as5048a, outputs=['as5048a'])
 
 
-cam = PiCamera(image_w=cfg.IMAGE_W, image_h=cfg.IMAGE_H, image_d=cfg.IMAGE_DEPTH)
-V.add(cam, inputs=[], outputs=['cam/image_array'], threaded=True)
+# cam = PiCamera(image_w=cfg.IMAGE_W, image_h=cfg.IMAGE_H, image_d=cfg.IMAGE_DEPTH)
+# V.add(cam, inputs=[], outputs=['cam/image_array'], threaded=True)
 
 ctr = get_js_controller(cfg)
 V.add(ctr,
