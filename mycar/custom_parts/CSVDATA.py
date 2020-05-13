@@ -69,12 +69,12 @@ class CSVDATA():
             if self.createfile == True:
                 self.newfile()
                 self.createfile = False
-            else:
-                with open(self.filepath, 'a+', newline='') as csvfile:
-                    writer = csv.writer(csvfile)
-                    writer.writerows(self.lastbuff)
-                    csvfile.flush()
-                self.lastbuff.clear()
+
+            with open(self.filepath, 'a+', newline='') as csvfile:
+                writer = csv.writer(csvfile)
+                writer.writerows(self.lastbuff)
+                csvfile.flush()
+            self.lastbuff.clear()
 
     def update(self):
         while self.on:
