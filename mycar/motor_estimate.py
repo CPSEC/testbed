@@ -14,7 +14,7 @@ cfg = dk.load_config()
 meta = []
 V = Vehicle()
 
-pulse = Pulse(interval=4, cycle=0.5, length=20, min=0.0, max=0.2)
+pulse = Pulse(interval=4, cycle=0.5, length=20, min=0.0, max=0.3)
 V.add(pulse, outputs=['user/throttle', 'recording'])
 
 
