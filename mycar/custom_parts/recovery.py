@@ -1,15 +1,11 @@
 import time
+import glpk
+
+# dependency
+# pyglpk https://github.com/bradfordboyle/pyglpk
 
 
-# How to call this part?
-# V = Vehicle()
-# t = template(p1)
-# V.add(t, input=['in1', 'in2'], output=['tdata1','tdata2'], threaded=True)
-# V.start()
-
-
-
-class template:
+class Recovery:
     def __init__(self, p1, poll_delay=0.01):
         self.on = True
         self.poll_delay = poll_delay
@@ -55,8 +51,4 @@ class template:
 if __name__ == "__main__":
     iter = 0
     t = template()
-    while iter < 3:
-        tdata1, tdata2 = t.run()
-        print(tdata1, tdata2)
-        iter += 1
-        time.sleep(0.5)
+
