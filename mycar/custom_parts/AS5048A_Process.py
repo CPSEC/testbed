@@ -1,3 +1,5 @@
+# dependency: pip install adafruit-circuitpython-busdevice
+
 import time
 import multiprocessing
 import board
@@ -75,7 +77,8 @@ def feed_position(b1p, b1t, b2p, b2t, b1n, b2n, cbn):
         lb = cbn.value
 
         # avoid overflow
-        if idx > 99:
+        if idx > 199:
+            print('share memory is not enough')
             continue
 
         as5048a.get_angle()
@@ -96,11 +99,11 @@ class speed:
         self.poll_delay = poll_delay
 
         # create shared memory
-        self.buff1_position = multiprocessing.Array('i', 100)
-        self.buff1_time = multiprocessing.Array('i', 100)
+        self.buff1_position = multiprocessing.Array('i', 200)
+        self.buff1_time = multiprocessing.Array('i', 200)
         self.buff1_num = multiprocessing.Value('i')
-        self.buff2_position = multiprocessing.Array('i', 100)
-        self.buff2_time = multiprocessing.Array('i', 100)
+        self.buff2_position = multiprocessing.Array('i', 200)
+        self.buff2_time = multiprocessing.Array('i', 200)
         self.buff2_num = multiprocessing.Value('i')
         self.current_buff = multiprocessing.Value('i')
         self.current_buff.value = 1
@@ -173,11 +176,24 @@ class speed:
 
 # test
 if __name__ == "__main__":
-    iter = 0
-    t = speed()
-    time.sleep(1)
-    while iter < 10:
-        time.sleep(0.01)
-        data = t.run()
-        print('data=', data)
-        iter += 1
+    pass
+    # test 1:  as5048 read speed
+    as5048a = AS5048A()
+    start = time.time_ns()
+    for i in range(1000):
+        as5048a.get_angle()
+    end = time.time_ns()
+    speed = (end-start)/1000
+    rate = 1e9/speed
+    print('Read {:.2f} times per second'.format(rate))
+
+
+    # iter = 0
+    # t = speed()
+    # time.sleep(1)
+    # while iter < 10:
+    #     time.sleep(0.01)
+    #     data = t.run()
+    #     print('data=', data)
+    #     iter += 1
+
