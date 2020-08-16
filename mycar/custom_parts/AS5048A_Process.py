@@ -61,8 +61,6 @@ def feed_position(b1p, b1t, b2p, b2t, b1n, b2n, cbn):
     idx = 0
     lb = -1
     while True:
-        time.sleep(0.0001)
-
         if cbn.value != lb:
             # switch buffer
             idx = 0
@@ -188,11 +186,10 @@ if __name__ == "__main__":
     print('Read {:.2f} times per second'.format(rate))
     # Read 3415.98 times per second
 
-    # test 2:  as5048 read times within 20ms with delay
+    # test 2:  as5048 read times within 20ms
     as5048a = AS5048A()
     start = time.time_ns()
     for i in range(1000):
-        time.sleep(0.0001)
         as5048a.get_angle()
     end = time.time_ns()
     speed = (end - start) / 1000
