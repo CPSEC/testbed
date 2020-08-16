@@ -61,7 +61,7 @@ def feed_position(b1p, b1t, b2p, b2t, b1n, b2n, cbn):
     idx = 0
     lb = -1
     while True:
-        time.sleep(0.0005)
+        time.sleep(0.0001)
 
         if cbn.value != lb:
             # switch buffer
@@ -143,8 +143,8 @@ class speed:
         theta_t = []
         for i in range(bn - 1):
             theta_t_i = t[i + 1] - t[i]
-            # remove tasks missing deadline
-            if theta_t_i > 2500000 or theta_t_i < 0:
+            # remove tasks missing deadline 1.5ms
+            if theta_t_i > 1500000 or theta_t_i < 0:
                 continue
             theta_p_i = filter(p[i] - p[i + 1])
 
@@ -186,14 +186,16 @@ if __name__ == "__main__":
     speed = (end-start)/1000
     rate = 1e9/speed
     print('Read {:.2f} times per second'.format(rate))
+    # Read 3415.98 times per second
 
-
-    # iter = 0
-    # t = speed()
-    # time.sleep(1)
-    # while iter < 10:
-    #     time.sleep(0.01)
-    #     data = t.run()
-    #     print('data=', data)
-    #     iter += 1
+    # test 2:  as5048 read times within 20ms with delay
+    as5048a = AS5048A()
+    start = time.time_ns()
+    for i in range(1000):
+        time.sleep(0.0001)
+        as5048a.get_angle()
+    end = time.time_ns()
+    speed = (end - start) / 1000
+    rate = 0.02 * 1e9 / speed
+    print('Read {:.2f} times within 20ms'.format(rate))
 
