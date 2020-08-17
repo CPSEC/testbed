@@ -69,12 +69,11 @@ class SocketData:
 
     def run_threaded(self, *args):
         # prepare data to be sent
-        current_time = time.time()
+        current_time = args[0]
         if self.start_time is None:
             self.start_time = current_time
         self.sensor['milliseconds'] = current_time - self.start_time
-
-        index = 0
+        index = 1
         for i in self.sensor_h:
             self.sensor[i] = args[index]
             index += 1

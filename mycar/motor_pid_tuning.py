@@ -2,6 +2,7 @@ from donkeycar.vehicle import Vehicle
 import donkeycar as dk
 from custom_parts.AS5048A_Process import speed
 from custom_parts.SocketData import SocketData
+from custom_parts.Clock import Clock
 
 cfg = dk.load_config()
 V = Vehicle()
@@ -9,11 +10,10 @@ V = Vehicle()
 sensor = ['as5048a']
 parameter = ['rspeed', 'mp', 'mi', 'md', 'sp', 'si', 'sd']
 setting = ['rspeed', 'mp', 'mi', 'md', 'sp', 'si', 'sd']
-
-print(cfg.CAMERA_TYPE)
-print(cfg.HOST)
-print(cfg.MOTOR_P)
 V.mem.put(parameter, [40, cfg.MOTOR_P, cfg.MOTOR_I, cfg.MOTOR_D, cfg.SERVO_P, cfg.SERVO_I, cfg.SERVO_D])
+
+clock = Clock()
+V.add(clock, outputs=['milliseconds'])
 
 as5048a = speed()
 V.add(as5048a, outputs=['as5048a'])
@@ -22,7 +22,7 @@ V.add(as5048a, outputs=['as5048a'])
 host = cfg.HOST
 port = cfg.PORT
 sep = cfg.SEP
-inputs = sensor + parameter
+inputs = ['milliseconds'] + sensor + parameter
 outputs = setting
 sock = SocketData(host, port, sensor, parameter, setting, sep)
 V.add(sock, inputs=inputs, outputs=outputs, threaded=True)
