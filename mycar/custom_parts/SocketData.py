@@ -29,7 +29,7 @@ class SocketData:
         self.has_image = image
         self.setting_h = setting
         # Initiate your part here
-        self.sock = None
+        self.sock = self.connect()
         # get from server
         self.setting = {}
         self.setting_updated = False
@@ -94,8 +94,7 @@ class SocketData:
         # Similar as run function
 
     def poll(self):
-        read_sockets, write_sockets, error_sockets = select.select(
-            [self.sock], [self.sock], [], 0)
+        read_sockets, write_sockets, error_sockets = select.select([self.sock], [self.sock], [], 0)
 
         for s in read_sockets:
             data = s.recv(1024)
