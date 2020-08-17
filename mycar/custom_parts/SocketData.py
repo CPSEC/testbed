@@ -38,6 +38,8 @@ class SocketData:
         self.sensor = {}
         self.parameter = {}
         self.image = None
+        # start time
+        self.start_time = None
 
     def connect(self):
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -67,6 +69,11 @@ class SocketData:
 
     def run_threaded(self, *args):
         # prepare data to be sent
+        current_time = time.time()
+        if self.start_time is None:
+            self.start_time = current_time
+        self.sensor['milliseconds'] = current_time - self.start_time
+
         index = 0
         for i in self.sensor_h:
             self.sensor[i] = args[index]
