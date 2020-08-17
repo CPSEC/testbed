@@ -10,6 +10,9 @@ sensor = ['as5048a']
 parameter = ['rspeed', 'mp', 'mi', 'md', 'sp', 'si', 'sd']
 setting = ['rspeed', 'mp', 'mi', 'md', 'sp', 'si', 'sd']
 
+print(cfg.CAMERA_TYPE)
+print(cfg.OLED_KEY)
+print(cfg.Motor_P)
 V.mem.put(parameter, [40, cfg.Motor_P, cfg.Motor_I, cfg.Motor_D, cfg.Servo_P, cfg.Servo_I, cfg.Servo_D])
 
 as5048a = speed()
