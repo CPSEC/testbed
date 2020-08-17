@@ -66,6 +66,7 @@ class SocketData:
         # Works when threaded=True
 
     def run_threaded(self, *args, **kwargs):
+        print(kwargs)
         # prepare data to be sent
         for i in kwargs:
             if i in self.sensor_h:

@@ -75,8 +75,8 @@ def feed_position(b1p, b1t, b2p, b2t, b1n, b2n, cbn):
         lb = cbn.value
 
         # avoid overflow
-        if idx > 499:
-            print('share memory is not enough')
+        if idx > 199:
+            # print('share memory is not enough')
             continue
 
         as5048a.get_angle()
@@ -97,11 +97,11 @@ class speed:
         self.poll_delay = poll_delay
 
         # create shared memory
-        self.buff1_position = multiprocessing.Array('i', 500)
-        self.buff1_time = multiprocessing.Array('i', 500)
+        self.buff1_position = multiprocessing.Array('i', 200)
+        self.buff1_time = multiprocessing.Array('i', 200)
         self.buff1_num = multiprocessing.Value('i')
-        self.buff2_position = multiprocessing.Array('i', 500)
-        self.buff2_time = multiprocessing.Array('i', 500)
+        self.buff2_position = multiprocessing.Array('i', 200)
+        self.buff2_time = multiprocessing.Array('i', 200)
         self.buff2_num = multiprocessing.Value('i')
         self.current_buff = multiprocessing.Value('i')
         self.current_buff.value = 1
