@@ -13,7 +13,7 @@ from custom_parts.AS5048A_Process import speed
 from custom_parts.OLED import OLED
 from custom_parts.PID import *
 from custom_parts.list_generator import LPulse
-from custom_parts.SocketData import SocketData
+from custom_parts.SocketData_he import SocketData
 
 import donkeycar as dk
 import time

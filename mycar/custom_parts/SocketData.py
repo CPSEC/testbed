@@ -1,115 +1,127 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
-from math import sin
-import socket
-import json
-import select
-from datetime import datetime, timedelta
+# dependency:
+
 import time
+import socket
+import select
+import json
+import queue
 
-# How to call this part?
-# V = Vehicle()
-# t = template(p1)
-# V.add(t, input=['in1', 'in2'], output=['tdata1','tdata2'], threaded=True)
-# V.start()
-
-
-class SocketData():
-    """
-     Do NOT run as thread
-    """
-
-    def __init__(self, inputs, poll_delay=1.1):
+class SocketData:
+    def __init__(self, host, port, sensor, parameter, setting, sep, image=False, poll_delay=0.01):
         self.on = True
         self.poll_delay = poll_delay
-        self.index = 0
-        self.HOST = '192.168.1.3'
-        self.PORT = 13244
-        self.inputs = inputs
-        self.row = []
-        self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-        self.sock.connect((self.HOST, self.PORT))
-        self.sock.setblocking(False)
+        # optional, parameter p1
+        self.host = host
+        self.port = port
+        self.sep = sep
+        # initiate your data
+        self.sensor_h = sensor
+        self.parameter_h = parameter
+        self.has_image = image
+        self.setting_h = setting
+        # Initiate your part here
+        self.sock = None
+        # get from server
+        self.setting = {}
+        self.setting_updated = False
+        # data to be sent
+        self.sensor_queue = queue.Queue()
+        self.sensor = {}
+        self.parameter = {}
+        self.image = None
 
-        self.rspeed = 0
-        self.mp = 0
-        self.mi = 0
-        self.md = 0
+    def connect(self):
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        try:
+            sock.connect((self.host, self.port))
+            sock.setblocking(False)
+        except:
+            pass
+        return sock
 
-    def run(self, *args):
+    def run(self, in1=0, in2=0):
         pass
+        # Call in the control loop
+        # Works when threaded=False
+        # Input is parameters, Return your output
+
+    def shutdown(self):
+        self.on = False
+        time.sleep(0.2)
+        # Call once before stop the part
+
+    def update(self):
+        while self.on:
+            self.poll()
+        # your thread
+        # Works when threaded=True
+
+    def run_threaded(self, *args, **kwargs):
+        # prepare data to be sent
+        for i in kwargs:
+            if i in self.sensor_h:
+                self.sensor[i] = kwargs[i]
+            if i in self.parameter_h:
+                self.parameter[i] = kwargs[i]
+            if i == 'image':
+                self.image = kwargs[i]
+        self.sensor_queue.put_nowait(self.sensor)
+        # return received data
+        setting_lst = []
+        if self.setting_updated:
+            self.setting_updated = False
+            for i in self.setting_h:
+                setting_lst.append(self.setting[i])
+        else:
+            # do not change
+            for i in self.setting_h:
+                setting_lst.append(self.parameter[i])
+        return setting_lst
+        # Call in the control loop
+        # Works when threaded=True
+        # Similar as run function
 
     def poll(self):
-        cur = datetime.now()
-        nxt = cur + timedelta(microseconds=50)
-        count = 0
-        sep = '\x1e'
-
-        header = ['milliseconds', 'as5048a', 'throttle', 'vm', 'angle', 'bias', 'radius', 'hcsr04', 'vp', 'heading',
-                  'roll',
-                  'pitch', 'ori_x', 'ori_y', 'ori_z', 'ori_w', 'temp_c', 'mag_x', 'mag_y', 'mag_z', 'gyr_x', 'gyr_y',
-                  'gyr_z',
-                  'acc_x', 'acc_y', 'acc_z', 'lacc_x', 'lacc_y', 'lacc_z', 'gra_x', 'gra_y', 'gra_z']
         read_sockets, write_sockets, error_sockets = select.select(
             [self.sock], [self.sock], [], 0)
 
         for s in read_sockets:
             data = s.recv(1024)
             if data:
-                df, ignored, buffer = data.decode().partition(sep)
-
-                df_json = json.loads(df)
-                self.rspeed = df_json['speed']
-                self.mp = df_json['throttle-PID']['P']
-                self.mi = df_json['throttle-PID']['I']
-                self.md = df_json['throttle-PID']['D']
-                # self.sp = df_json['servo-PID']['P']
-                # self.si = df_json['servo-PID']['I']
-                # self.sd = df_json['servo-PID']['D']
-                print('Receive:', data.decode())
-                print('------------')
+                try:
+                    df, ignored, buffer = data.decode().partition(self.sep)
+                    df_json = json.loads(df)
+                    self.setting['rspeed'] = df_json['speed']
+                    self.setting['mp'] = df_json['throttle-PID']['P']
+                    self.setting['mi'] = df_json['throttle-PID']['I']
+                    self.setting['md'] = df_json['throttle-PID']['D']
+                    self.setting['sp'] = df_json['servo-PID']['P']
+                    self.setting['si'] = df_json['servo-PID']['I']
+                    self.setting['sd'] = df_json['servo-PID']['D']
+                    # TODO: Other setting
+                    self.setting_updated = True
+                except:
+                    pass
 
         for s in write_sockets:
-            # cur = datetime.now()
-            # if cur >= nxt:
-            #     # data
-            #     d[0] = 0.01 * count
-            #     d[1] = 30 * sin(0.1 * count) + 30
-            p_dict = {'rspeed': 40,
-                      'mp': 0.001748, 'mi': 0.00050, 'md': -0.00000005,
-                      'sp': 6, 'si': 7, 'sd': 8}
-            d_dict = {'sensor': dict(zip(header, self.row)), 'parameter': p_dict}
+            if not self.sensor_queue.empty():
+                sensor_dict = self.sensor_queue.get_nowait()
+                d_dict = {'sensor': sensor_dict}
+                if self.parameter:
+                    d_dict['parameter'] = self.parameter
+                if self.image:
+                    d_dict['image'] = self.image
 
-            message = (json.dumps(d_dict) + sep).encode()
-            self.sock.send(message)
-            # print('send', d_dict)
-
-            # nxt = nxt + timedelta(milliseconds=10)
-            # count += 1
-
-        # sock.close()
-        return self.rspeed, self.mp, self.mi, self.md
-
-    def update(self):
-        while self.on:
-            self.poll()
-            time.sleep(self.poll_delay)
-
-    def run_threaded(self, *args):
-        assert len(self.inputs) == len(args)
-        current_time = time.time()
-        self.row.append(current_time)
-        self.row.extend(list(args))
+                message = (json.dumps(d_dict) + self.sep).encode()
+                while message:
+                    try:
+                        sent = s.send(message)
+                    except BlockingIOError:
+                        pass
+                    else:
+                        message = message[sent:]
 
 
 # test
 if __name__ == "__main__":
-    inputs = [1596765960.2403817, 0.0, 0.2117611089733787, 10.718304, 0.0, None, None, 0, 10.750271999999999, 26.0625,
-              1.0625, -0.6875, 0.00372314453125, -0.01092529296875, -0.2255859375, 0.97418212890625, 25, -8.1875,
-              15.5625, -43.5, -0.0044444444444444444, -0.0022222222222222222, 0.0, 0.2, 0.12, 9.72, 0.0, 0.01, -0.07,
-              0.19, 0.12, 9.8]
-    t = SocketData(inputs)
-    iter = 0
-    while iter < 80:
-        t.poll()
-        iter += 1
+    pass
