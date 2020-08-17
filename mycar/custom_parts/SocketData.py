@@ -7,9 +7,18 @@ import json
 import queue
 
 class SocketData:
-    def __init__(self, host, port, sensor, parameter, setting, sep, image=False, poll_delay=0.01):
+    def __init__(self, host, port, sensor, parameter, setting, sep, image=False):
+        """
+        Args:
+            host: server ip
+            port: server port
+            sensor: names of sensor data to be sent
+            parameter: names of parameter data to be sent
+            setting: get from server, subset of parameter
+            sep: to separate two json
+            image:  video frame
+        """
         self.on = True
-        self.poll_delay = poll_delay
         # optional, parameter p1
         self.host = host
         self.port = port
@@ -75,7 +84,8 @@ class SocketData:
         else:
             # do not change
             for i in self.setting_h:
-                setting_lst.append(self.parameter[i])
+                setting_lst.append(kwargs[i])
+
         return setting_lst
         # Call in the control loop
         # Works when threaded=True

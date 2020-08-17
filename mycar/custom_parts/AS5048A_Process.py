@@ -75,7 +75,7 @@ def feed_position(b1p, b1t, b2p, b2t, b1n, b2n, cbn):
         lb = cbn.value
 
         # avoid overflow
-        if idx > 199:
+        if idx > 499:
             print('share memory is not enough')
             continue
 
@@ -97,11 +97,11 @@ class speed:
         self.poll_delay = poll_delay
 
         # create shared memory
-        self.buff1_position = multiprocessing.Array('i', 200)
-        self.buff1_time = multiprocessing.Array('i', 200)
+        self.buff1_position = multiprocessing.Array('i', 500)
+        self.buff1_time = multiprocessing.Array('i', 500)
         self.buff1_num = multiprocessing.Value('i')
-        self.buff2_position = multiprocessing.Array('i', 200)
-        self.buff2_time = multiprocessing.Array('i', 200)
+        self.buff2_position = multiprocessing.Array('i', 500)
+        self.buff2_time = multiprocessing.Array('i', 500)
         self.buff2_num = multiprocessing.Value('i')
         self.current_buff = multiprocessing.Value('i')
         self.current_buff.value = 1
@@ -150,9 +150,7 @@ class speed:
             theta_p.append(theta_p_i)
 
         result = (sum(theta_p) / 0x3fff) / ((sum(theta_t) + 1) / 1000000000)
-        # if result < 0:
-        #     print('num=', bn, '  theta_p=', theta_p)
-        #     print('num=', bn, '  theta_p=', theta_t)
+
 
         return result
 
