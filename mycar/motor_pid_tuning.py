@@ -11,17 +11,17 @@ parameter = ['rspeed', 'mp', 'mi', 'md', 'sp', 'si', 'sd']
 setting = ['rspeed', 'mp', 'mi', 'md', 'sp', 'si', 'sd']
 
 print(cfg.CAMERA_TYPE)
-print(cfg.OLED_KEY)
-print(cfg.Motor_P)
-V.mem.put(parameter, [40, cfg.Motor_P, cfg.Motor_I, cfg.Motor_D, cfg.Servo_P, cfg.Servo_I, cfg.Servo_D])
+print(cfg.HOST)
+print(cfg.MOTOR_P)
+V.mem.put(parameter, [40, cfg.MOTOR_P, cfg.MOTOR_I, cfg.MOTOR_D, cfg.SERVO_P, cfg.SERVO_I, cfg.SERVO_D])
 
 as5048a = speed()
 V.add(as5048a, outputs=['as5048a'])
 
 # def __init__(self, host, port, sensor, parameter, setting, sep, image=False, poll_delay=0.01):
-host = cfg.host
-port = cfg.port
-sep = cfg.sep
+host = cfg.HOST
+port = cfg.PORT
+sep = cfg.SEP
 inputs = sensor + parameter
 outputs = setting
 sock = SocketData(host, port, sensor, parameter, setting, sep)
