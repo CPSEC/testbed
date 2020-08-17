@@ -65,16 +65,17 @@ class SocketData:
         # your thread
         # Works when threaded=True
 
-    def run_threaded(self, *args, **kwargs):
-        print(kwargs)
+    def run_threaded(self, *args):
         # prepare data to be sent
-        for i in kwargs:
-            if i in self.sensor_h:
-                self.sensor[i] = kwargs[i]
-            if i in self.parameter_h:
-                self.parameter[i] = kwargs[i]
-            if i == 'image':
-                self.image = kwargs[i]
+        index = 0
+        for i in self.sensor_h:
+            self.sensor[i] = args[index]
+            index += 1
+        for i in self.parameter_h:
+            self.parameter[i] = args[index]
+            index += 1
+        if self.has_image:
+            self.image = args[index]
         self.sensor_queue.put_nowait(self.sensor)
         # return received data
         setting_lst = []
@@ -85,7 +86,7 @@ class SocketData:
         else:
             # do not change
             for i in self.setting_h:
-                setting_lst.append(kwargs[i])
+                setting_lst.append(self.parameter[i])
 
         return setting_lst
         # Call in the control loop
