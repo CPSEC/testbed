@@ -10,7 +10,7 @@ from custom_parts.pulse_generator import Pulse
 cfg = dk.load_config()
 V = Vehicle()
 
-sensor = ['as5048a', 'throttle']
+sensor = ['as5048a', 'throttle', 'rspeed']
 parameter = ['rspeed', 'mp', 'mi', 'md', 'sp', 'si', 'sd']
 setting = ['rspeed', 'mp', 'mi', 'md', 'sp', 'si', 'sd']
 V.mem.put(parameter, [40, cfg.MOTOR_P, cfg.MOTOR_I, cfg.MOTOR_D, cfg.SERVO_P, cfg.SERVO_I, cfg.SERVO_D])
