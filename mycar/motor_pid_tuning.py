@@ -4,8 +4,9 @@ from donkeycar.parts.actuator import PCA9685, PWMSteering, PWMThrottle
 from custom_parts.AS5048A_Process import speed
 from custom_parts.SocketData import SocketData
 from custom_parts.Clock import Clock
-from custom_parts.PID import PID
+# from custom_parts.PID import PID
 from custom_parts.pulse_generator import Pulse
+from custom_parts.PID_new import PID
 
 cfg = dk.load_config()
 V = Vehicle()
@@ -29,14 +30,18 @@ pulse = Pulse(interval=10, cycle=0.5, length=300, min=60, max=100)
 V.add(pulse, outputs=['rspeed', 'recording'])
 
 # pid controller
-p = cfg.MOTOR_P
-i = cfg.MOTOR_I
-d = cfg.MOTOR_D
-dt = 1/cfg.DRIVE_LOOP_HZ
-control_up = 1
-control_lo = 0
-motor_pid = PID(p, i, d, dt, control_up, control_lo)
-V.add(motor_pid, inputs=['rspeed', 'as5048a', 'mp', 'mi', 'md'], outputs=['throttle'])
+# p = cfg.MOTOR_P
+# i = cfg.MOTOR_I
+# d = cfg.MOTOR_D
+# dt = 1/cfg.DRIVE_LOOP_HZ
+# control_up = 1
+# control_lo = 0
+# motor_pid = PID(p, i, d, dt, control_up, control_lo)
+# V.add(motor_pid, inputs=['rspeed', 'as5048a', 'mp', 'mi', 'md'], outputs=['throttle'])
+
+# def run(self, p, i, d, SetPoint, feedback_value):
+pid = PID()
+V.add(pid, inputs=['mp', 'mi', 'md', 'rspeed', 'as5048a'], outputs=['throttle'])
 
 # actuator - Motor
 throttle_controller = PCA9685(cfg.THROTTLE_CHANNEL, cfg.PCA9685_I2C_ADDR, busnum=cfg.PCA9685_I2C_BUSNUM)
@@ -55,9 +60,5 @@ outputs = setting
 sock = SocketData(host, port, sensor, parameter, setting, sep)
 V.add(sock, inputs=inputs, outputs=outputs, threaded=True)
 
-
 V.start(rate_hz=cfg.DRIVE_LOOP_HZ,
         max_loop_count=cfg.MAX_LOOPS)
-
-
-
