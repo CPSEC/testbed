@@ -26,7 +26,7 @@ as5048a = speed()
 V.add(as5048a, outputs=['as5048a'])
 
 # reference speed (set point)
-pulse = Pulse(interval=10, cycle=0.5, length=300, min=60, max=100)
+pulse = Pulse(interval=10, cycle=0.5, length=1000, min=60, max=100)
 V.add(pulse, outputs=['rspeed', 'recording'])
 
 # pid controller
