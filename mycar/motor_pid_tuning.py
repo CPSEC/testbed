@@ -14,6 +14,7 @@ sensor = ['as5048a', 'throttle', 'rspeed']
 parameter = ['rspeed', 'mp', 'mi', 'md', 'sp', 'si', 'sd']
 setting = ['rspeed', 'mp', 'mi', 'md', 'sp', 'si', 'sd']
 V.mem.put(parameter, [40, cfg.MOTOR_P, cfg.MOTOR_I, cfg.MOTOR_D, cfg.SERVO_P, cfg.SERVO_I, cfg.SERVO_D])
+V.mem.put(['throttle'], [0.25])
 
 # time of current control step
 clock = Clock()
@@ -27,15 +28,15 @@ V.add(as5048a, outputs=['as5048a'])
 pulse = Pulse(interval=10, cycle=0.5, length=100, min=30, max=60)
 V.add(pulse, outputs=['rspeed', 'recording'])
 
-# pid controller
-p = cfg.MOTOR_P
-i = cfg.MOTOR_I
-d = cfg.MOTOR_D
-dt = 1/cfg.DRIVE_LOOP_HZ
-control_up = 1
-control_lo = 0
-motor_pid = PID(p, i, d, dt, control_up, control_lo)
-V.add(motor_pid, inputs=['rspeed', 'as5048a', 'mp', 'mi', 'md'], outputs=['throttle'])
+# # pid controller
+# p = cfg.MOTOR_P
+# i = cfg.MOTOR_I
+# d = cfg.MOTOR_D
+# dt = 1/cfg.DRIVE_LOOP_HZ
+# control_up = 1
+# control_lo = 0
+# motor_pid = PID(p, i, d, dt, control_up, control_lo)
+# V.add(motor_pid, inputs=['rspeed', 'as5048a', 'mp', 'mi', 'md'], outputs=['throttle'])
 
 # actuator - Motor
 throttle_controller = PCA9685(cfg.THROTTLE_CHANNEL, cfg.PCA9685_I2C_ADDR, busnum=cfg.PCA9685_I2C_BUSNUM)
