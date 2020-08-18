@@ -14,7 +14,7 @@ sensor = ['as5048a', 'throttle', 'rspeed']
 parameter = ['rspeed', 'mp', 'mi', 'md', 'sp', 'si', 'sd']
 setting = ['rspeed', 'mp', 'mi', 'md', 'sp', 'si', 'sd']
 V.mem.put(parameter, [40, cfg.MOTOR_P, cfg.MOTOR_I, cfg.MOTOR_D, cfg.SERVO_P, cfg.SERVO_I, cfg.SERVO_D])
-V.mem.put(['throttle'], [0.25])
+V.mem.put(['throttle'], 0.25)
 
 # time of current control step
 clock = Clock()
