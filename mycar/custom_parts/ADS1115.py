@@ -14,8 +14,8 @@ class ADS1115:
         # create ADC object
         ads = ADS.ADS1015(i2c)
 
-        POWER_CHANNEL_MOTOR = ADS.P3  # A3 on board
-        POWER_CHANNEL_PI = ADS.P2  # A2 on board
+        POWER_CHANNEL_MOTOR = ADS.P2  # A3 on board
+        POWER_CHANNEL_PI = ADS.P3  # A2 on board
 
         self.chan_motor = AnalogIn(ads, POWER_CHANNEL_MOTOR)
         self.chan_pi = AnalogIn(ads, POWER_CHANNEL_PI)
