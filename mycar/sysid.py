@@ -29,7 +29,7 @@ V.add(as5048a, outputs=['as5048a'])
 ads1115 = ADS1115(coeff_m=cfg.VM_COEFFICIENT, coeff_p=cfg.VP_COEFFICIENT)
 V.add(ads1115, outputs=['vm', 'vp'], threaded=True)
 
-signal_lst = [0.16]#[0] + ([0.3]*3 + [0]*2)*2  + [0.2, 0.22, 0.24, 0.26, 0.28, 0.3, 0.28, 0.26, 0.24, 0.22, 0.2] + [0]
+signal_lst = [0] + ([0.22]*3 + [0]*2)*2  + [0.16, 0.18, 0.2, 0.22, 0.24, 0.26, 0.24, 0.22, 0.2, 0.18, 0.16] + [0]
 control_input = LPulse(interval=2, length=200, lst=signal_lst)
 V.add(control_input, outputs=['throttle', 'recording'])
 
