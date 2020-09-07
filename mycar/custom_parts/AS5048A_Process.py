@@ -101,7 +101,7 @@ class speed:
         # debug: for anomaly
         if result > 120:
             print('p=', p, '\n', 't=', t)
-        print(result)
+            print(result)
 
         return result
 
