@@ -28,7 +28,7 @@ def feed_position(b1p, b1t, b2p, b2t, b1n, b2n, cbn):
 
         # avoid overflow
         if idx > shared_mem_size-1:
-            print('share memory is not enough')
+            # print('share memory is not enough')
             continue
 
         bp[idx] = as5048a.get_angle(debug=False)
@@ -97,6 +97,10 @@ class speed:
         if sum_theta_t == 0:
             sum_theta_t = 1
         result = (sum(theta_p) / 0x4000) / (sum_theta_t / 1000000000)
+
+        # debug: for anomaly
+        if result > 120:
+            print('p=', p, '\n', 't=', t)
 
         return result
 
