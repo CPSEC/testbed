@@ -95,7 +95,7 @@ class AS5048A:
         self.spi.close()
 
 
-if "__name__" == "__main__":
+if __name__ == "__main__":
     as5048a = AS5048A()
     for i in range(10):
         print(hex(as5048a.get_angle()))
