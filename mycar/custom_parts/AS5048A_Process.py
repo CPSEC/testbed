@@ -83,8 +83,8 @@ class speed:
         for i in range(bn - 1):
             theta_t_i = t[i + 1] - t[i]
             # remove tasks missing deadline 1.5ms
-            if theta_t_i > 0.0015 or theta_t_i < 0:
-                continue
+            # if theta_t_i > 0.0015 or theta_t_i < 0:
+            #     continue
             theta_p_i = p[i] - p[i + 1]
             # remove theta p over zero
             if theta_p_i < -10467 or theta_p_i > 10467:
