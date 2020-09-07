@@ -55,12 +55,14 @@ class AS5048A:
             cmd: AS5048A command
         Returns: data or -1 (error)
         """
+        if debug:
+            print("cmd:", hex(cmd))
         command = CMD_READ | cmd
         command |= (self.calc_parity(command) << 15)
         cmd_lst = [(command >> 8) & 0xff, command & 0xff]
         self.spi.xfer(cmd_lst)
         if debug:
-            print('sent', [hex(value) for value in cmd_lst])
+            print('sent:', [hex(value) for value in cmd_lst])
 
         command = CMD_READ | CMD_NOP
         command |= (self.calc_parity(command) << 15)
