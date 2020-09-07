@@ -2,7 +2,7 @@
 # spi-dev
 import spidev
 
-CMD_READ = 0X4000
+CMD_READ = 0x4000
 CMD_ANGLE = 0x3FFF
 CMD_READ_MAG = 0x3FFE
 CMD_READ_DIAG = 0x3FFD
@@ -57,14 +57,14 @@ class AS5048A:
         """
         command = CMD_READ | cmd
         command |= (self.calc_parity(command) << 15)
-        cmd_lst = [command >> 8 & 0xff, command & 0xff]
+        cmd_lst = [(command >> 8) & 0xff, command & 0xff]
         self.spi.xfer(cmd_lst)
         if debug:
             print('sent', [hex(value) for value in cmd_lst])
 
         command = CMD_READ | CMD_NOP
         command |= (self.calc_parity(command) << 15)
-        cmd_lst = [command >> 8 & 0xff, command & 0xff]
+        cmd_lst = [(command >> 8) & 0xff, command & 0xff]
         res = self.spi.xfer(cmd_lst)
         if debug:
             print('sent:', [hex(value) for value in cmd_lst])
@@ -82,7 +82,10 @@ class AS5048A:
                 print("AS5048A: There exists a transmission error in a previous host transmission.")
             command = CMD_READ | CMD_CLEAR_ERROR
             command |= (self.calc_parity(command) << 15)
-            self.spi.xfer([command >> 8 & 0xff, command & 0xff])
+            cmd_lst = [(command >> 8) & 0xff, command & 0xff]
+            self.spi.xfer(cmd_lst)
+            if debug:
+                print('sent', [hex(value) for value in cmd_lst])
 
         if error_flag:
             return -1
