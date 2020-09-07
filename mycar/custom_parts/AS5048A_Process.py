@@ -78,13 +78,6 @@ class speed:
         p = bp[:bn]
         t = bt[:bn]
 
-        def filter(theta_angle):
-            if theta_angle < -10467:
-                theta_angle += 0x3fff
-            if theta_angle > 10467:
-                theta_angle -= 0x3fff
-            return theta_angle
-
         theta_p = []
         theta_t = []
         for i in range(bn - 1):
@@ -92,7 +85,10 @@ class speed:
             # remove tasks missing deadline 1.5ms
             if theta_t_i > 1500000 or theta_t_i < 0:
                 continue
-            theta_p_i = filter(p[i] - p[i + 1])
+            theta_p_i = p[i] - p[i + 1]
+            # remove theta p over zero
+            if theta_p_i < -10467 or theta_p_i > 10467:
+                continue
 
             theta_t.append(theta_t_i)
             theta_p.append(theta_p_i)

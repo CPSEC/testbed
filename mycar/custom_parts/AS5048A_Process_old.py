@@ -1,56 +1,8 @@
-# dependency: pip install adafruit-circuitpython-busdevice
-
-import time
 import multiprocessing
-import board
-import busio
-import digitalio
 import time
+from .AS5048A import AS5048A
 
-CMD_ANGLE = bytearray([0xff, 0xff])
-CMD_AGC = bytearray([0x7f, 0xfd])
-CMD_MAG = bytearray([0x7f, 0xfe])
-CMD_CLAER = bytearray([0x42, 0x01])
-CMD_NOP = bytearray([0xc0, 0x00])
-
-
-class AS5048A:
-    def __init__(self):
-        self.spi = busio.SPI(board.SCK, MISO=board.MISO)
-        self.cs = digitalio.DigitalInOut(board.CE0)
-        self.cs.direction = digitalio.Direction.OUTPUT
-        self.cs.value = True
-        while not self.spi.try_lock():
-            pass
-        self.spi.configure(baudrate=3000000, polarity=0, phase=1)
-        self.spi.unlock()
-        self.angle = 0
-        self.sampletime = time.time_ns()
-
-    def spi_write_read(self, cmd):
-        result = bytearray(2)
-        self.cs.value = False
-        self.spi.write_readinto(cmd, result)
-        self.cs.value = True
-        time.sleep(350 / 1000000000)
-        return result
-
-    def get_angle(self):
-        while not self.spi.try_lock():
-            pass
-        try:
-            self.spi_write_read(CMD_ANGLE)
-            result = self.spi_write_read(CMD_NOP)
-            result0 = result[0] & 0x3f
-            result1 = result[1] & 0xe0  # ignore the last five value for noise
-            self.angle = (result0 << 8) + result1  # 0-0x3fff
-            self.sampletime = time.time_ns()
-            # clear error flag
-            if result[0] & 0x40 > 0:
-                print('error flag clear')
-                self.spi_write_read(CMD_CLAER)
-        finally:
-            self.spi.unlock()
+shared_mem_size = 400
 
 
 def feed_position(b1p, b1t, b2p, b2t, b1n, b2n, cbn):
@@ -75,16 +27,12 @@ def feed_position(b1p, b1t, b2p, b2t, b1n, b2n, cbn):
         lb = cbn.value
 
         # avoid overflow
-        if idx > 199:
-            # print('share memory is not enough')
+        if idx > shared_mem_size-1:
+            print('share memory is not enough')
             continue
 
-        as5048a.get_angle()
-        # did not get the value actually
-        if as5048a.angle == 0:
-            continue
-        bp[idx] = as5048a.angle
-        bt[idx] = as5048a.sampletime
+        bp[idx] = as5048a.get_angle(debug=False)
+        bt[idx] = time.time_ns()
         # print('current_buff=', cbn.value, '  idx=', bn.value, ' angle=', bp[idx])
         idx += 1
         bn.value = idx
@@ -93,16 +41,15 @@ def feed_position(b1p, b1t, b2p, b2t, b1n, b2n, cbn):
 
 class speed:
 
-    def __init__(self, poll_delay=0.01):
+    def __init__(self):
         self.on = True
-        self.poll_delay = poll_delay
 
         # create shared memory
-        self.buff1_position = multiprocessing.Array('i', 200)
-        self.buff1_time = multiprocessing.Array('i', 200)
+        self.buff1_position = multiprocessing.Array('i', shared_mem_size)
+        self.buff1_time = multiprocessing.Array('i', shared_mem_size)
         self.buff1_num = multiprocessing.Value('i')
-        self.buff2_position = multiprocessing.Array('i', 200)
-        self.buff2_time = multiprocessing.Array('i', 200)
+        self.buff2_position = multiprocessing.Array('i', shared_mem_size)
+        self.buff2_time = multiprocessing.Array('i', shared_mem_size)
         self.buff2_num = multiprocessing.Value('i')
         self.current_buff = multiprocessing.Value('i')
         self.current_buff.value = 1
@@ -150,8 +97,10 @@ class speed:
             theta_t.append(theta_t_i)
             theta_p.append(theta_p_i)
 
-        result = (sum(theta_p) / 0x3fff) / ((sum(theta_t) + 1) / 1000000000)
-
+        sum_theta_t = sum(theta_t)
+        if sum_theta_t == 0:
+            sum_theta_t = 1
+        result = (sum(theta_p) / 0x4000) / (sum_theta_t / 1000000000)
 
         return result
 
@@ -174,24 +123,3 @@ class speed:
 # test
 if __name__ == "__main__":
     pass
-    # test 1:  as5048 read speed
-    as5048a = AS5048A()
-    start = time.time_ns()
-    for i in range(1000):
-        as5048a.get_angle()
-    end = time.time_ns()
-    speed = (end-start)/1000
-    rate = 1e9/speed
-    print('Read {:.2f} times per second'.format(rate))
-    # Read 3415.98 times per second
-
-    # test 2:  as5048 read times within 20ms
-    as5048a = AS5048A()
-    start = time.time_ns()
-    for i in range(1000):
-        as5048a.get_angle()
-    end = time.time_ns()
-    speed = (end - start) / 1000
-    rate = 0.02 * 1e9 / speed
-    print('Read {:.2f} times within 20ms'.format(rate))
-
