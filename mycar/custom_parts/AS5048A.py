@@ -78,7 +78,7 @@ class AS5048A:
         error_flag = 1
         data = 0
         if (res[0] & (1 << 6)) == 0:
-            data = (res[0] & 0x3f) << 8 + res[1]
+            data = ((res[0] & 0x3f) << 8) + res[1]
             error_flag = self.calc_parity(data) ^ (res[0] >> 7)
             if error_flag & debug:
                 print("AS5048A: Parity bit check failed.")
