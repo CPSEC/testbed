@@ -2,6 +2,8 @@ import multiprocessing
 import time
 from .AS5048A import AS5048A
 
+shared_mem_size = 400
+
 
 def feed_position(b1p, b1t, b2p, b2t, b1n, b2n, cbn):
     bp = b1p
@@ -25,7 +27,7 @@ def feed_position(b1p, b1t, b2p, b2t, b1n, b2n, cbn):
         lb = cbn.value
 
         # avoid overflow
-        if idx > 199:
+        if idx > shared_mem_size-1:
             print('share memory is not enough')
             continue
 
@@ -43,11 +45,11 @@ class speed:
         self.on = True
 
         # create shared memory
-        self.buff1_position = multiprocessing.Array('i', 200)
-        self.buff1_time = multiprocessing.Array('i', 200)
+        self.buff1_position = multiprocessing.Array('i', shared_mem_size)
+        self.buff1_time = multiprocessing.Array('i', shared_mem_size)
         self.buff1_num = multiprocessing.Value('i')
-        self.buff2_position = multiprocessing.Array('i', 200)
-        self.buff2_time = multiprocessing.Array('i', 200)
+        self.buff2_position = multiprocessing.Array('i', shared_mem_size)
+        self.buff2_time = multiprocessing.Array('i', shared_mem_size)
         self.buff2_num = multiprocessing.Value('i')
         self.current_buff = multiprocessing.Value('i')
         self.current_buff.value = 1
