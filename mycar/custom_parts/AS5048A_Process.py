@@ -99,7 +99,7 @@ class speed:
         result = (sum(theta_p) / 0x4000) / sum_theta_t
 
         # debug: for anomaly
-        if result > 120:
+        if result > 120 or result < 1:
             print('p=', p, '\n', 't=', t)
         print(result)
 
