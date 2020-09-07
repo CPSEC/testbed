@@ -46,10 +46,10 @@ class speed:
 
         # create shared memory
         self.buff1_position = multiprocessing.Array('i', shared_mem_size)
-        self.buff1_time = multiprocessing.Array('i', shared_mem_size)
+        self.buff1_time = multiprocessing.Array('d', shared_mem_size)
         self.buff1_num = multiprocessing.Value('i')
         self.buff2_position = multiprocessing.Array('i', shared_mem_size)
-        self.buff2_time = multiprocessing.Array('i', shared_mem_size)
+        self.buff2_time = multiprocessing.Array('d', shared_mem_size)
         self.buff2_num = multiprocessing.Value('i')
         self.current_buff = multiprocessing.Value('i')
         self.current_buff.value = 1
@@ -99,7 +99,7 @@ class speed:
         result = (sum(theta_p) / 0x4000) / sum_theta_t
 
         # debug: for anomaly
-        if result > 120 or result < 1:
+        if result > 120:
             print('p=', p, '\n', 't=', t)
         print(result)
 
