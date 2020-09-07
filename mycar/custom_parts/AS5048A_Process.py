@@ -82,11 +82,13 @@ class speed:
         theta_t = []
         for i in range(bn - 1):
             theta_t_i = t[i + 1] - t[i]
-            # remove tasks missing deadline 5ms
+            # this should be adjusted according to your ref speed range
+            # raspbian is not a real-time system!
+            # remove tasks missing deadline 5ms (mitigate small anomaly)
             if theta_t_i > 0.003 or theta_t_i < 0:
                 continue
             theta_p_i = p[i] - p[i + 1]
-            # remove theta p over zero
+            # remove theta p over zero  (mitigate large anomaly)
             if theta_p_i < -7000 or theta_p_i > 7000:
                 continue
 
@@ -99,9 +101,9 @@ class speed:
         result = (sum(theta_p) / 0x4000) / sum_theta_t
 
         # debug: for anomaly
-        if result > 120 or result < 70:
-            print('p=', p, '\n', 't=', t)
-            print(result)
+        # if result > 120 or result < 70:
+        #     print('p=', p, '\n', 't=', t)
+        #     print(result)
 
         return result
 
