@@ -116,5 +116,5 @@ class AS5048A:
 
 if __name__ == "__main__":
     as5048a = AS5048A()
-    for i in range(10):
-        print(hex(as5048a.get_angle()))
+    for i in range(30):
+        print(hex(as5048a.get_angle(debug=False)))
