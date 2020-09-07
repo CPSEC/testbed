@@ -32,7 +32,7 @@ def feed_position(b1p, b1t, b2p, b2t, b1n, b2n, cbn):
             continue
 
         bp[idx] = as5048a.get_angle(debug=False)
-        bt[idx] = time.time_ns()
+        bt[idx] = time.time()
         # print('current_buff=', cbn.value, '  idx=', bn.value, ' angle=', bp[idx])
         idx += 1
         bn.value = idx
@@ -83,7 +83,7 @@ class speed:
         for i in range(bn - 1):
             theta_t_i = t[i + 1] - t[i]
             # remove tasks missing deadline 1.5ms
-            if theta_t_i > 1500000 or theta_t_i < 0:
+            if theta_t_i > 0.0015 or theta_t_i < 0:
                 continue
             theta_p_i = p[i] - p[i + 1]
             # remove theta p over zero
@@ -95,8 +95,8 @@ class speed:
 
         sum_theta_t = sum(theta_t)
         if sum_theta_t == 0:
-            sum_theta_t = 1
-        result = (sum(theta_p) / 0x4000) / (sum_theta_t / 1000000000)
+            sum_theta_t = 0.00000001
+        result = (sum(theta_p) / 0x4000) / sum_theta_t
 
         # debug: for anomaly
         if result > 120:
