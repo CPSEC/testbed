@@ -2,7 +2,7 @@ import multiprocessing
 import time
 from .AS5048A import AS5048A
 
-shared_mem_size = 400
+shared_mem_size = 100
 
 
 def feed_position(b1p, b1t, b2p, b2t, b1n, b2n, cbn):
@@ -101,6 +101,7 @@ class speed:
         # debug: for anomaly
         if result > 120:
             print('p=', p, '\n', 't=', t)
+        print(result)
 
         return result
 
