@@ -31,7 +31,9 @@ def button_c_callback(channel):
 
 GPIO.setwarnings(False)  # Ignore warning for now
 GPIO.setmode(GPIO.BCM)  # Use physical pin numbering
-GPIO.setup(36, GPIO.IN)  # Set pin 10 to be an input pin and set initial value to be pulled low (off)
+GPIO.setup(16, GPIO.IN)  # Set pin 10 to be an input pin and set initial value to be pulled low (off)
+GPIO.setup(20, GPIO.IN)
+GPIO.setup(21, GPIO.IN)
 GPIO.add_event_detect(16, GPIO.RISING, callback=button_a_callback)
 GPIO.add_event_detect(20, GPIO.RISING, callback=button_b_callback)
 GPIO.add_event_detect(21, GPIO.RISING, callback=button_c_callback)
