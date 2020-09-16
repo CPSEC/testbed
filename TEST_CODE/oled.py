@@ -67,7 +67,7 @@ while True:
     draw.rectangle((0, 0, width, height), outline=0, fill=0)
     # Enumerate characters and draw them offset vertically based on a sine wave.
     x = pos
-    for i, c in enumerate(text):
+    for a, c in enumerate(text):
         # Stop drawing if off the right side of screen.
         if x > width:
             break
