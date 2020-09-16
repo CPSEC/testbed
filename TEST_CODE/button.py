@@ -3,6 +3,11 @@
 # S2  ----  GPIO20
 # S3  ----  GPIO21
 
+# add 2 rows into /boot/config.txt
+# # GPIO
+# gpio=13,16,19,20,21,26=ip
+
+
 import RPi.GPIO as GPIO  # Import Raspberry Pi GPIO library
 
 global a, b, c
