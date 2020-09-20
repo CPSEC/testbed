@@ -2,6 +2,7 @@
 # Trig  ----  GPIO27
 # Echo  ----  GPIO17
 
+# sudo apt install libgpiod2
 # pip install adafruit-circuitpython-hcsr04
 
 import time
