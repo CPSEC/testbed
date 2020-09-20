@@ -10,6 +10,7 @@
 
 from board import SCL, SDA
 import busio
+import time
 
 # Import the PCA9685 module.
 from adafruit_pca9685 import PCA9685
@@ -29,8 +30,10 @@ servo3 = servo.Servo(pca.channels[3])
 
 for i in range(180):
     servo3.angle = i
+    time.sleep(0.01)
 for i in range(180):
     servo3.angle = 180 - i
+    time.sleep(0.01)
 
 servo3.angle = 90
 pca.deinit()
