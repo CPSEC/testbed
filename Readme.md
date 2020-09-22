@@ -12,7 +12,7 @@
 ### Modify `/boot/config.txt`
 1. Enable I2C6
 
-    add 2 rows into /boot/config.txt  
+    add 2 rows into /boot/config.txt  \
     `sudo vim /boot/config.txt`
     ```
     # Additional overlays and parameters are documented /boot/overlays/README
@@ -20,7 +20,8 @@
     ```
 
 2. Set Input GPIO
-    add 2 rows into /boot/config.txt
+
+    add 2 rows into /boot/config.txt \
     `sudo vim /boot/config.txt`
     ```
     # GPIO
