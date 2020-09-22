@@ -1,0 +1,8 @@
+adafruit-circuitpython-ads1x15
+spi-dev
+adafruit-extended-bus
+adafruit-circuitpython-bno055
+adafruit-circuitpython-hcsr04
+adafruit-circuitpython-ssd1306
+adafruit-circuitpython-pca9685
+adafruit-circuitpython-motor
