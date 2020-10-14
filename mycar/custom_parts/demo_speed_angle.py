@@ -21,10 +21,10 @@ class Demo_speed_angle:
 
     def run(self):
         current_time = datetime.datetime.now()
-        if current_time > self.end_time:
-            return 0, 0
-        else:
+        if current_time <= self.end_time:
             return self.angle, self.throttle
+        else:
+            return 0, 0
 
         # Call in the control loop
         # Works when threaded=False
