@@ -11,7 +11,7 @@ import adafruit_bno055
 
 
 class BNO055:
-    def __init__(self, p1, poll_delay=0.01):
+    def __init__(self, poll_delay=0.01):
         self.on = True
         self.poll_delay = poll_delay
         # optional, parameter p1
