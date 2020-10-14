@@ -8,7 +8,7 @@ from donkeycar.parts.camera import PiCamera
 
 from custom_parts.HCSR04 import HCSR04
 from custom_parts.ADS1115 import ADS1115
-from custom_parts.BNO055 import BNO055
+from custom_parts.BNO055_uart import BNO055
 from custom_parts.AS5048A_Process import speed
 from custom_parts.OLED import OLED
 from custom_parts.PID import *

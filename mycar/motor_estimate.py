@@ -2,7 +2,7 @@ from donkeycar.vehicle import Vehicle
 from donkeycar.parts.actuator import PCA9685, PWMSteering, PWMThrottle
 
 from custom_parts.ADS1115 import ADS1115
-from custom_parts.BNO055 import BNO055
+from custom_parts.BNO055_uart import BNO055
 from custom_parts.AS5048A_Process import speed
 from custom_parts.OLED import OLED
 from custom_parts.CSVDATA import CSVDATA
