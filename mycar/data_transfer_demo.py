@@ -4,7 +4,8 @@ from custom_parts.AS5048A_Process import speed
 from custom_parts.SocketData import SocketData
 from custom_parts.video import Video
 from custom_parts.BNO055 import BNO055
-from donkeycar.parts.camera import PiCamera
+from custom_parts.demo_speed_angle import Demo_speed_angle
+from donkeycar.parts.actuator import PCA9685, PWMSteering, PWMThrottle
 
 cfg = dk.load_config()
 V = dk.vehicle.Vehicle()
@@ -35,6 +36,25 @@ V.add(bno055, outputs=bno055_output)
 # video
 video = Video()
 V.add(video, outputs=['image'])
+
+# angle, throttle
+demo_angle_throttle = Demo_speed_angle()
+V.add(demo_angle_throttle, outputs=['angle', 'throttle'])
+
+
+steering_controller = PCA9685(cfg.STEERING_CHANNEL, cfg.PCA9685_I2C_ADDR, busnum=cfg.PCA9685_I2C_BUSNUM)
+steering = PWMSteering(controller=steering_controller,
+                       left_pulse=cfg.STEERING_LEFT_PWM,
+                       right_pulse=cfg.STEERING_RIGHT_PWM)
+
+throttle_controller = PCA9685(cfg.THROTTLE_CHANNEL, cfg.PCA9685_I2C_ADDR, busnum=cfg.PCA9685_I2C_BUSNUM)
+throttle = PWMThrottle(controller=throttle_controller,
+                       max_pulse=cfg.THROTTLE_FORWARD_PWM,
+                       zero_pulse=cfg.THROTTLE_STOPPED_PWM,
+                       min_pulse=cfg.THROTTLE_REVERSE_PWM)
+
+V.add(steering, inputs=['angle'])
+V.add(throttle, inputs=['throttle'])
 
 # send data
 host = cfg.HOST
