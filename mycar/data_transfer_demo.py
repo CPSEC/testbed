@@ -2,6 +2,7 @@ import donkeycar as dk
 from custom_parts.Clock import Clock
 from custom_parts.AS5048A_Process import speed
 from custom_parts.SocketData import SocketData
+from custom_parts.video import Video
 from donkeycar.parts.camera import PiCamera
 
 cfg = dk.load_config()
@@ -21,13 +22,17 @@ V.add(clock, outputs=['milliseconds'])
 as5048a = speed()
 V.add(as5048a, outputs=['as5048a'])
 
+# video
+video = Video()
+V.add(video, outputs=['image'])
+
 # send data
 host = cfg.HOST
 port = cfg.PORT
 sep = cfg.SEP
-inputs = ['milliseconds'] + sensor + parameter
+inputs = ['milliseconds'] + sensor + parameter + ['image']
 outputs = setting
-sock = SocketData(host, port, sensor, parameter, setting, sep)
+sock = SocketData(host, port, sensor, parameter, setting, sep, image=True)
 V.add(sock, inputs=inputs, outputs=outputs, threaded=True)
 
 V.start(rate_hz=cfg.DRIVE_LOOP_HZ,
