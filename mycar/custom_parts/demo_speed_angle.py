@@ -14,7 +14,7 @@ class Demo_speed_angle:
         self.poll_delay = poll_delay
         # optional, parameter p1
         self.angle = 0.5
-        self.throttle = 0
+        self.throttle = 0.2
         # Initiate your part here
         self.start_time = datetime.datetime.now()
         self.end_time = self.start_time + datetime.timedelta(seconds=5)
