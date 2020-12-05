@@ -7,13 +7,17 @@ import matplotlib.image as mpimg
 import pickle
 import glob
 import donkeycar as dk
+from pi_camera import PiCamera, CameraDisplay
+
+Cam = PiCamera()
+frame = Cam.run()
 
 
 class calibrate_camera:
-    def __init__(self, poll_delay=0.01):
+    def __init__(self, poll_delay=0.01,):
         self.on = True
         self.poll_delay = poll_delay
-    
+        
         # initiate your data
         self.objp_list = []
         self.corners_list = []
@@ -85,8 +89,7 @@ class calibrate_camera:
             # Make a list of calibration images
             fname = 'camera_cal/calibration%s.jpg' % str(k)
             img = cv2.imread(fname)
-            
-            # Convert to grayscale
+                       # Convert to grayscale
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
             
             # Find the chessboard corners
@@ -114,13 +117,13 @@ class calibrate_camera:
 # test
 if __name__ == "__main__":
     C = calibrate_camera()
-    mtx, dist = C.run()
+    mtx,dist = C.run()
     save_dict = {'mtx': mtx, 'dist': dist}
     with open('calibrate_camera.p', 'wb') as f:
         pickle.dump(save_dict, f)
 
     # Undistort example calibration image
-    img = mpimg.imread('camera_cal/calibration5.jpg')
+    img = mpimg.imread('/home/pi/testbed/mycar/custom_parts/img/testimg.jpg')
     dst = cv2.undistort(img, mtx, dist, None, mtx)
     plt.imshow(dst)
-    plt.savefig('camera_cal/undistort_calibration.png')
+    plt.savefig('/home/pi/testbed/mycar/data/test.png')
