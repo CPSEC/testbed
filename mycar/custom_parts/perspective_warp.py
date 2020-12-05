@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import pickle
 import time
-#from combined_thresh import combine_threshold
+from pi_camera import PiCamera, CameraDisplay
 
 # How to call this part?
 # V = Vehicle()
@@ -13,9 +13,9 @@ import time
 # V.start()
 
 class perspective_warp(object):
-    def __init__(self, img, poll_delay=0.01):
+    def __init__(self, poll_delay=0.01):
         self.on = True
-        self.img = img
+        #self.img = 0
         self.poll_delay = poll_delay
 
         # Initiate your part here
@@ -28,8 +28,8 @@ class perspective_warp(object):
         self.m = 0 
         self.m_inv = 0
     
-    def run(self):
-        self.poll()
+    def run(self, img):
+        self.poll(img)
         return self.warped, self.unwarped, self.m, self.m_inv
         # Call in the control loop
         # Works when threaded=False
@@ -47,25 +47,26 @@ class perspective_warp(object):
         # your thread
         # Works when threaded=True
 
-    def run_threaded(self):
+    def run_threaded(self, img):
         return self.warped, self.unwarped, self.m, self.m_inv
         # Call in the control loop
         # Works when threaded=True
         # Similar as run function
 
-    def poll(self):
+    def poll(self, img):
         # your actual function of the thread
         
         self.m = cv2.getPerspectiveTransform(self.src, self.dst)
         self.m_inv = cv2.getPerspectiveTransform(self.dst, self.src)
-        self.warped = cv2.warpPerspective(self.img, self.m, self.img_size, flags=cv2.INTER_LINEAR)
+        self.warped = cv2.warpPerspective(img, self.m, self.img_size, flags=cv2.INTER_LINEAR)
         self.unwarped = cv2.warpPerspective(self.warped, self.m_inv, (self.warped.shape[1], self.warped.shape[0]), flags=cv2.INTER_LINEAR)  # DEBUG
         
 if __name__ == '__main__':
+
     # read, perspective warp and save a test image
     img = cv2.imread('/home/pi/testbed/mycar/custom_parts/img/testimg.jpg')
-    P = perspective_warp(img)
-    warped, unwarped, m, m_inv = P.run()
+    P = perspective_warp()
+    warped, unwarped, m, m_inv = P.run(img)
     writeStatus = cv2.imwrite('/home/pi/testbed/mycar/custom_parts/img/warp_testimg.jpg', warped) 
     if writeStatus is True:
         print("Warped image successfully written")
