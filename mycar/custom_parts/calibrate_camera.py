@@ -25,11 +25,10 @@ class calibrate_camera(object):
         self.tvecs = 0
         self.dst = 0
         self.camera = 0
-        
         # Initiate your part here
         self.objp_dict = {
             1: (8, 6),
-            2: (8, 5),
+            2: (8, 6),
             3: (8, 6),
             4: (8, 6),
             5: (8, 6),
@@ -83,6 +82,7 @@ class calibrate_camera(object):
     
     def poll(self):
     
+    #while self.k < 20:
         for k in self.objp_dict:
             nx, ny = self.objp_dict[k]
         
@@ -91,8 +91,10 @@ class calibrate_camera(object):
             objp[:,:2] = np.mgrid[0:nx, 0:ny].T.reshape(-1,2)
 
             # Make a list of calibration images
-            fname = '/home/pi/testbed/mycar/data/calibrate%s.jpg' % str(k)
+            fname = '/home/pi/testbed/mycar/data/160120/calibrate%s.jpg' % str(k)
             img = cv2.imread(fname)
+            x,y = img.shape[0:2]
+            img = cv2.resize(img, (int(y*3), int(x*3)))
             # Convert to grayscale
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
             
@@ -114,12 +116,15 @@ class calibrate_camera(object):
                 print('Warning: ret = %s for %s' % (ret, fname))
             
             print(k)
+                #self.k += 1
 
     
-        fname = '/home/pi/testbed/mycar/data/calibrate1.jpg'
+        fname = '/home/pi/testbed/mycar/data/160120/calibrate1.jpg'
         img = cv2.imread(fname)
         img_size = (img.shape[1], img.shape[0])
         ret, self.mtx, self.dist, self.rvecs, self.tvecs = cv2.calibrateCamera(self.objp_list, self.corners_list, img_size, None, None)
+        print('mtx: ', self.mtx)
+        print('dist: ', self.dist)
 
 
         #self.camera = np.float32(self.camera)
@@ -145,7 +150,9 @@ if __name__ == "__main__":
         pickle.dump(save_dict, f)
 
     # Undistort example calibration image
-    img = mpimg.imread('/home/pi/testbed/mycar/data/calibrate11.jpg')
+    img = mpimg.imread('/home/pi/testbed/mycar/data/160120/test.jpg')
+    x,y = img.shape[0:2]
+    img = cv2.resize(img, (int(y*3), int(x*3)))
     dst = cv2.undistort(img, mtx, dist, None, mtx)
     plt.imshow(dst)
-    plt.savefig('/home/pi/testbed/mycar/data/test2.png')
+    plt.savefig('/home/pi/testbed/mycar/data/test5.png')
